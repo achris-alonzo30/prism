@@ -51,8 +51,6 @@ export const FileUpload = () => {
     let orgId: string | undefined = undefined;
     if (organization.isLoaded && user.isLoaded) { orgId = organization.organization?.id ?? user.user?.id; }
 
-    const files = useQuery(api.files.getFiles, orgId ? { orgId } : "skip");
-
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -161,7 +159,6 @@ export const FileUpload = () => {
                                         ) : (
                                             <p>Upload</p>
                                         )}
-                                        
                                     </Button>
                                 </div>
                             </form>
