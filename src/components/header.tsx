@@ -1,3 +1,5 @@
+"use client";
+
 import {
     SignedIn,
     SignedOut,
@@ -22,7 +24,13 @@ export const Header = () => {
                 <div className="flex items-center gap-x-2">
                     <SignedIn>
                         <div className="flex items-center gap-x-4">
-                            <OrganizationSwitcher />
+                            <OrganizationSwitcher appearance={{
+                                elements: {
+                                    organizationPreviewTextContainer: "text-primary-color",
+                                    userPreviewTextContainer: "text-primary-color",
+                                    organizationSwitcherPopoverCard: "bg-white",
+                                },
+                            }} />
                             <UserButton afterSignOutUrl="/" />
                         </div>
                     </SignedIn>
