@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
 import ConvexClientProvider from "@/providers/convex-client-provider";
 import { cn } from '../lib/utils';
+import { Header } from "@/components/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,20 +23,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <ThemeProvider
+    <html lang="en" suppressHydrationWarning>
+      
+      <body className={cn(`min-h-screen font-sans antialiased `, inter.className)}>
+        <ConvexClientProvider>
+          <ThemeProvider
         attribute="class"
         defaultTheme="system"
         enableSystem
         disableTransitionOnChange
       >
-      <body className={cn(`min-h-screen font-sans antialiased grainy`, inter.className)}>
-        <ConvexClientProvider>
+          <Header />
           {children}
+          </ThemeProvider>
         </ConvexClientProvider>
         
       </body>
-      </ThemeProvider>
+      
     </html>
   );
 }
