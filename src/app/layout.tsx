@@ -1,11 +1,12 @@
 import "./globals.css";
+import { cn } from '../lib/utils';
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import { Header } from "@/components/header";
+import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/providers/theme-provider";
 import ConvexClientProvider from "@/providers/convex-client-provider";
-import { cn } from '../lib/utils';
-import { Header } from "@/components/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,6 +36,7 @@ export default function RootLayout({
       >
           <Header />
           {children}
+          <Toaster />
           </ThemeProvider>
         </ConvexClientProvider>
         
