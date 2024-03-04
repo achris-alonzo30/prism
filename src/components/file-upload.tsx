@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { useOrganization, useUser } from "@clerk/nextjs";
+import { Doc } from "../../convex/_generated/dataModel";
 
 
 
@@ -64,21 +65,30 @@ export const FileUpload = () => {
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
-            if (!orgId) return; 
+            if (!orgId) return;
             const postUrl = await generateUploadUrl();
+
+            const fileType = data.file[0].type;
 
             const result = await fetch(postUrl, {
                 method: "POST",
-                headers: { "Content-Type": data.file[0].type },
+                headers: { "Content-Type": fileType },
                 body: data.file[0]
             })
 
             const { storageId } = await result.json();
 
+            const types = {
+                "image/png": "image",
+                "application/pdf": "pdf",
+                "text/csv": "csv"
+            } as Record<string, Doc<"files">["fileType"]>;
+
             await createFile({
                 fileName: data.fileName,
                 fileId: storageId,
                 orgId,
+                fileType: types[fileType]
             })
 
             form.reset();
@@ -101,8 +111,8 @@ export const FileUpload = () => {
     }
 
     return (
-        <Dialog 
-            open={isOpen} 
+        <Dialog
+            open={isOpen}
             onOpenChange={(open) => {
                 setIsOpen(open);
                 form.reset();
@@ -117,53 +127,53 @@ export const FileUpload = () => {
                     <DialogTitle>Upload File</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                                <FormField
-                                    control={form.control}
-                                    name="fileName"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>File Name</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="File Name" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="fileName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>File Name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="File Name" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="file"
+                                render={() => (
+                                    <FormItem>
+                                        <FormLabel>File</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="file"
+                                                {...fileRef}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="flex justify-end gap-x-2 mt-2">
+                                <Button type="button" onClick={() => setIsOpen(false)} variant="ghost" size="sm" className="rounded-md" >Cancel</Button>
+                                <Button type="submit" disabled={isLoading} className="flex items-center text-sm gap-x-2 text-black bg-primary-color hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400" size="sm">
+                                    {isLoading ? (
+                                        <span className="flex items-center gap-x-2">
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                            Uploading...
+                                        </span>
+                                    ) : (
+                                        <p>Upload</p>
                                     )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="file"
-                                    render={() => (
-                                        <FormItem>
-                                            <FormLabel>File</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="file"
-                                                    {...fileRef}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <div className="flex justify-end gap-x-2 mt-2">
-                                    <Button type="button" onClick={() => setIsOpen(false)} variant="ghost" size="sm" className="rounded-md" >Cancel</Button>
-                                    <Button type="submit" disabled={isLoading} className="flex items-center text-sm gap-x-2 text-black bg-primary-color hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400" size="sm">
-                                        {isLoading ? (
-                                            <span className="flex items-center gap-x-2">
-                                                <Loader2 className="h-4 w-4 animate-spin" />
-                                                Uploading...
-                                            </span>
-                                        ) : (
-                                            <p>Upload</p>
-                                        )}
-                                    </Button>
-                                </div>
-                            </form>
-                        </Form>
-                    </div>            
+                                </Button>
+                            </div>
+                        </form>
+                    </Form>
+                </div>
             </DialogContent>
         </Dialog>
     )

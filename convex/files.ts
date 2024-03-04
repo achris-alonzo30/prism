@@ -1,6 +1,7 @@
 import { getUser } from "./users";
 import { ConvexError, v } from "convex/values";
 import { MutationCtx, QueryCtx, mutation, query } from "./_generated/server";
+import { fileTypes } from "./schema";
 
 export const generateUploadUrl = mutation(async (ctx) => {
   const identity = await ctx.auth.getUserIdentity();
@@ -25,7 +26,12 @@ async function orgAccess(
 }
 
 export const createFile = mutation({
-  args: { fileName: v.string(), orgId: v.string(), fileId: v.id("_storage") },
+  args: { 
+    fileName: v.string(), 
+    orgId: v.string(), 
+    fileId: v.id("_storage"),
+    fileType: fileTypes
+  },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
 
@@ -48,6 +54,7 @@ export const createFile = mutation({
       name: args.fileName,
       orgId: args.orgId,
       fileId: args.fileId,
+      fileType: args.fileType
     });
   },
 });
@@ -75,11 +82,12 @@ export const getFiles = query({
 });
 
 export const deleteFile = mutation({
-  args: { fileId: v.id("files")},
+  args: { fileId: v.id("files") },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
 
-    if (!identity) throw new ConvexError("You must be signed in to perform this action");
+    if (!identity)
+      throw new ConvexError("You must be signed in to perform this action");
 
     const file = await ctx.db.get(args.fileId);
 
@@ -98,5 +106,5 @@ export const deleteFile = mutation({
     }
 
     await ctx.db.delete(args.fileId);
-  }
-})
+  },
+});

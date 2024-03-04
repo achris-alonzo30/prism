@@ -33,9 +33,7 @@ export const FileDelete = ({ fileId }: { fileId: Id<"files"> }) => {
     return (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
             <AlertDialogTrigger asChild>
-                <ActionTooltip title={"Delete"}>
-                    <Button size="sm" className="flex w-full items-center text-center text-sm gap-x-2 text-rose-50 bg-rose-300 hover:bg-rose-400 transform hover:-translate-y-1 transition-all duration-400" ><Trash className="h-4 w-4" /></Button>
-                </ActionTooltip>
+                <Button size="sm" className="flex w-full items-center text-center text-sm gap-x-2 text-rose-50 bg-rose-500 hover:bg-rose-400 transform hover:-translate-y-1 transition-all duration-400" >Delete</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
