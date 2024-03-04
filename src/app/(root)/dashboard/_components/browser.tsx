@@ -29,7 +29,7 @@ export default function Browser({ title, favoriteFilter, deleteFilter }: Browser
 
     const favorites = useQuery(api.files.getAllFavorite, orgId ? { orgId } : "skip");
 
-    const files = useQuery(api.files.getFiles, orgId ? { orgId, query, favorites: favoriteFilter} : "skip");
+    const files = useQuery(api.files.getFiles, orgId ? { orgId, query, favorites: favoriteFilter, deletes: deleteFilter } : "skip");
 
     const isLoading = files === undefined;
     return (

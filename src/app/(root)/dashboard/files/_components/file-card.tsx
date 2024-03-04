@@ -49,11 +49,19 @@ export const FileCard = ({ file, favorites }: FileCardProps) => {
                 {/* TODO: Find a way to snapshot the pdf and csv to display the preview */}
             </CardContent>
             <CardFooter className="flex items-center justify-center w-full gap-x-1 p-2 ">
-                <FavoriteButton file={file} isFavorited={isFavorited} />
-                <DownloadButton file={file} />
-                <Protect role="org:admin" fallback={<></>}>
-                    <DeleteButton fileId={file._id} />
-                </Protect>
+                {file.markedForDeletion ? (
+                    <Protect role="org:admin" fallback={<></>}>
+                        <DeleteButton file={file} />
+                    </Protect>
+                ) : (
+                    <>
+                        <FavoriteButton file={file} isFavorited={isFavorited} />
+                        <DownloadButton file={file} />
+                        <Protect role="org:admin" fallback={<></>}>
+                            <DeleteButton file={file} />
+                        </Protect>
+                    </>
+                )}
             </CardFooter>
         </Card>
     )

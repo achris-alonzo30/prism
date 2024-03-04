@@ -118,6 +118,8 @@ export const getFiles = query({
 
     if (args.deletes) {
       files = files.filter((file) => file.markedForDeletion);
+    } else {
+      files = files.filter((file) => !file.markedForDeletion);
     }
 
     return files;
@@ -137,6 +139,23 @@ export const deleteFile = mutation({
 
     await ctx.db.patch(args.fileId, {
       markedForDeletion: true,
+    });
+  },
+});
+
+export const restoreFile = mutation({
+  args: { fileId: v.id("files") },
+  handler: async (ctx, args) => {
+    const access = await fileAccess(ctx, args.fileId);
+
+    if (!access) throw new ConvexError("File not found");
+
+    const admin = access.user.orgIds.find((org) => org.orgId === access.file.orgId)?.role === "admin";
+
+    if (!admin) throw new ConvexError("You must be an admin to perform this action");
+
+    await ctx.db.patch(args.fileId, {
+      markedForDeletion: false,
     });
   },
 });
