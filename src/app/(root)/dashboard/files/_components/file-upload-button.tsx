@@ -159,6 +159,7 @@ export const FileUploadButton = () => {
                                             <Input
                                                 type="file"
                                                 {...fileRef}
+                                                className="cursor-pointer"
                                             />
                                         </FormControl>
                                         <FormMessage />

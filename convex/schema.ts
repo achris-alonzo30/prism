@@ -14,6 +14,7 @@ export default defineSchema({
     name: v.string(),
     orgId: v.string(),
     fileType: fileTypes,
+    userId: v.id("users"),
     fileId: v.id("_storage"),
     markedForDeletion: v.optional(v.boolean()),
   })
@@ -22,12 +23,14 @@ export default defineSchema({
 
   users: defineTable({
     tokenIdentifier: v.string(),
+    name: v.optional(v.string()),
     orgIds: v.array(
       v.object({
         orgId: v.string(),
         role: roles,
       })
     ),
+    profileImage: v.optional(v.string()),
   }).index("by_tokenIdentifier", ["tokenIdentifier"]),
 
   favorites: defineTable({
