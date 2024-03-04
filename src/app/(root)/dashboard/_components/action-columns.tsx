@@ -48,7 +48,7 @@ export const ActionColumns = ({
      const restoreFile = useMutation(api.files.restoreFile);
      const toggleFavorite = useMutation(api.files.toggleFavorite);
      const { toast } = useToast();
-     const me = useQuery(api.users.getSelf);
+     const self = useQuery(api.users.getSelf);
 
      const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
@@ -121,7 +121,7 @@ export const ActionColumns = ({
                                    return (
                                         check({
                                              role: "org:admin",
-                                        }) || file.userId === me?._id
+                                        }) || file.userId === self?._id
                                    );
                               }}
                               fallback={<></>}
