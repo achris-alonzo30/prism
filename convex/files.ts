@@ -2,7 +2,13 @@ import { getUser } from "./users";
 import { fileTypes } from "./schema";
 import { Id } from "./_generated/dataModel";
 import { ConvexError, v } from "convex/values";
-import { MutationCtx, QueryCtx, mutation, query } from "./_generated/server";
+import {
+  MutationCtx,
+  QueryCtx,
+  internalMutation,
+  mutation,
+  query,
+} from "./_generated/server";
 
 // STORAGE FILE UPLOADS
 export const generateUploadUrl = mutation(async (ctx) => {
@@ -30,17 +36,15 @@ async function orgAccess(orgId: string, ctx: QueryCtx | MutationCtx) {
   if (!user) return null;
 
   const hasAccess =
-    user.orgIds.some((item) => item.orgId === orgId) || user.tokenIdentifier.includes(orgId);
+    user.orgIds.some((item) => item.orgId === orgId) ||
+    user.tokenIdentifier.includes(orgId);
 
   if (!hasAccess) return null;
 
   return { user };
 }
 
-async function fileAccess(
-  ctx: QueryCtx | MutationCtx,
-  fileId: Id<"files">
-) {
+async function fileAccess(ctx: QueryCtx | MutationCtx, fileId: Id<"files">) {
   const file = await ctx.db.get(fileId);
 
   if (!file) return null;
@@ -126,6 +130,23 @@ export const getFiles = query({
   },
 });
 
+export const deleteFilePeriodically = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const files = await ctx.db
+      .query("files")
+      .withIndex("by_markedForDeletion", (q) => q.eq("markedForDeletion", true))
+      .collect();
+
+    await Promise.all(
+      files.map(async (file) => {
+        await ctx.storage.delete(file.fileId);
+        return await ctx.db.delete(file._id);
+      })
+    );
+  },
+});
+
 export const deleteFile = mutation({
   args: { fileId: v.id("files") },
   handler: async (ctx, args) => {
@@ -133,9 +154,12 @@ export const deleteFile = mutation({
 
     if (!access) throw new ConvexError("File not found");
 
-    const admin = access.user.orgIds.find((org) => org.orgId === access.file.orgId)?.role === "admin";
+    const admin =
+      access.user.orgIds.find((org) => org.orgId === access.file.orgId)
+        ?.role === "admin";
 
-    if (!admin) throw new ConvexError("You must be an admin to perform this action");
+    if (!admin)
+      throw new ConvexError("You must be an admin to perform this action");
 
     await ctx.db.patch(args.fileId, {
       markedForDeletion: true,
@@ -150,9 +174,12 @@ export const restoreFile = mutation({
 
     if (!access) throw new ConvexError("File not found");
 
-    const admin = access.user.orgIds.find((org) => org.orgId === access.file.orgId)?.role === "admin";
+    const admin =
+      access.user.orgIds.find((org) => org.orgId === access.file.orgId)
+        ?.role === "admin";
 
-    if (!admin) throw new ConvexError("You must be an admin to perform this action");
+    if (!admin)
+      throw new ConvexError("You must be an admin to perform this action");
 
     await ctx.db.patch(args.fileId, {
       markedForDeletion: false,
@@ -199,9 +226,7 @@ export const getAllFavorite = query({
     const favorites = await ctx.db
       .query("favorites")
       .withIndex("by_userId_orgId_fileId", (q) =>
-        q
-          .eq("userId", hasAccess.user._id)
-          .eq("orgId", args.orgId)
+        q.eq("userId", hasAccess.user._id).eq("orgId", args.orgId)
       )
       .collect();
 

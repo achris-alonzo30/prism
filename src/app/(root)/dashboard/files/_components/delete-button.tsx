@@ -61,7 +61,7 @@ export const DeleteButton = ({ file }: { file: Doc<"files"> }) => {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This file will be marked for deletion for a period of time. Files are deleted periodically.
+                        This file will be marked for deletion and will be deleted after a minute.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
