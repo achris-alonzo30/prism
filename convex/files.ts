@@ -4,7 +4,6 @@ import { Id } from "./_generated/dataModel";
 import { ConvexError, v } from "convex/values";
 import { MutationCtx, QueryCtx, mutation, query } from "./_generated/server";
 
-
 // STORAGE FILE UPLOADS
 export const generateUploadUrl = mutation(async (ctx) => {
   const identity = await ctx.auth.getUserIdentity();
@@ -16,31 +15,10 @@ export const generateUploadUrl = mutation(async (ctx) => {
 });
 
 // UTILITY FUNCTIONS
-async function orgAccess(
-  orgId: string,
-  tokenIdentifier: string,
-  ctx: QueryCtx | MutationCtx
-) {
-  const user = await getUser(ctx, tokenIdentifier);
-
-  const hasAccess =
-    user.orgIds.includes(orgId) || user.tokenIdentifier.includes(orgId);
-
-  return hasAccess;
-}
-
-async function hasAccess(ctx: QueryCtx | MutationCtx, fileId: Id<"files">) {
+async function orgAccess(orgId: string, ctx: QueryCtx | MutationCtx) {
   const identity = await ctx.auth.getUserIdentity();
 
   if (!identity) return null;
-
-  const file = await ctx.db.get(fileId);
-
-  if (!file) return null;
-
-  const hasAccess = await orgAccess(file.orgId, identity.tokenIdentifier, ctx);
-
-  if (!hasAccess) return null;
 
   const user = await ctx.db
     .query("users")
@@ -51,7 +29,27 @@ async function hasAccess(ctx: QueryCtx | MutationCtx, fileId: Id<"files">) {
 
   if (!user) return null;
 
-  return { user, file };
+  const hasAccess =
+    user.orgIds.includes(orgId) || user.tokenIdentifier.includes(orgId);
+
+  if (!hasAccess) return null;
+
+  return { user };
+}
+
+async function fileAccess(
+  ctx: QueryCtx | MutationCtx,
+  fileId: Id<"files">
+) {
+  const file = await ctx.db.get(fileId);
+
+  if (!file) return null;
+
+  const hasAccess = await orgAccess(file.orgId, ctx);
+
+  if (!hasAccess) return null;
+
+  return { user: hasAccess.user, file };
 }
 
 // API CONVEX ACTIONS
@@ -63,16 +61,7 @@ export const createFile = mutation({
     fileType: fileTypes,
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity)
-      throw new ConvexError("You must be signed in to perform this action");
-
-    const hasAccess = await orgAccess(
-      args.orgId,
-      identity.tokenIdentifier,
-      ctx
-    );
+    const hasAccess = await orgAccess(args.orgId, ctx);
 
     if (!hasAccess) {
       throw new ConvexError(
@@ -96,15 +85,7 @@ export const getFiles = query({
     favorites: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) return [];
-
-    const hasAccess = await orgAccess(
-      args.orgId,
-      identity.tokenIdentifier,
-      ctx
-    );
+    const hasAccess = await orgAccess(args.orgId, ctx);
 
     if (!hasAccess) return [];
 
@@ -120,20 +101,12 @@ export const getFiles = query({
         file.name.toLowerCase().includes(query.toLowerCase())
       );
     }
+
     if (args.favorites) {
-      const user = await ctx.db
-        .query("users")
-        .withIndex("by_tokenIdentifier", (q) =>
-          q.eq("tokenIdentifier", identity.tokenIdentifier)
-        )
-        .first();
-
-      if (!user) return [];
-
       const favorites = await ctx.db
         .query("favorites")
         .withIndex("by_userId_orgId_fileId", (q) =>
-          q.eq("userId", user?._id).eq("orgId", args.orgId)
+          q.eq("userId", hasAccess.user._id).eq("orgId", args.orgId)
         )
         .collect();
 
@@ -149,7 +122,7 @@ export const getFiles = query({
 export const deleteFile = mutation({
   args: { fileId: v.id("files") },
   handler: async (ctx, args) => {
-    const access = await hasAccess(ctx, args.fileId);
+    const access = await fileAccess(ctx, args.fileId);
 
     if (!access) throw new ConvexError("File not found");
 
@@ -160,7 +133,7 @@ export const deleteFile = mutation({
 export const toggleFavorite = mutation({
   args: { fileId: v.id("files") },
   handler: async (ctx, args) => {
-    const access = await hasAccess(ctx, args.fileId);
+    const access = await fileAccess(ctx, args.fileId);
 
     if (!access) throw new ConvexError("File not found");
 
@@ -183,5 +156,25 @@ export const toggleFavorite = mutation({
     } else {
       await ctx.db.delete(favorite._id);
     }
+  },
+});
+
+export const getAllFavorite = query({
+  args: { orgId: v.string() },
+  handler: async (ctx, args) => {
+    const hasAccess = await orgAccess(args.orgId, ctx);
+
+    if (!hasAccess) return [];
+
+    const favorites = await ctx.db
+      .query("favorites")
+      .withIndex("by_userId_orgId_fileId", (q) =>
+        q
+          .eq("userId", hasAccess.user._id)
+          .eq("orgId", args.orgId)
+      )
+      .first();
+
+    return favorites;
   },
 });
