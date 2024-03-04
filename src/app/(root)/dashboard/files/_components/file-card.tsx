@@ -16,6 +16,7 @@ import { FileDelete } from "./file-delete";
 import { Button } from "@/components/ui/button";
 import { getFileUrl } from "@/lib/get-file-url";
 import { FileFavorite } from "./file-favorite";
+import { Protect } from "@clerk/nextjs";
 
 const typeIcons = {
     image: <ImageIcon className="h-5 w-5" />,
@@ -50,7 +51,9 @@ export const FileCard = ({ file, favorites }: FileCardProps) => {
             <CardFooter className="flex items-center justify-center w-full gap-x-1 p-2 ">
                 <FileFavorite file={file} isFavorited={isFavorited} />
                 <Button size="sm" className="flex w-full items-center text-center text-sm gap-x-2 text-white bg-primary-color/80 hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400" onClick={() => { window.open(getFileUrl(file.fileId), "_blank") }} >Download</Button>
-                <FileDelete fileId={file._id} />
+                <Protect role="org:admin" fallback={<></>}>
+                    <FileDelete fileId={file._id} />
+                </Protect>
             </CardFooter>
         </Card>
     )

@@ -30,7 +30,7 @@ async function orgAccess(orgId: string, ctx: QueryCtx | MutationCtx) {
   if (!user) return null;
 
   const hasAccess =
-    user.orgIds.includes(orgId) || user.tokenIdentifier.includes(orgId);
+    user.orgIds.some((item) => item.orgId === orgId) || user.tokenIdentifier.includes(orgId);
 
   if (!hasAccess) return null;
 
@@ -125,6 +125,10 @@ export const deleteFile = mutation({
     const access = await fileAccess(ctx, args.fileId);
 
     if (!access) throw new ConvexError("File not found");
+
+    const admin = access.user.orgIds.find((org) => org.orgId === access.file.orgId)?.role === "admin";
+
+    if (!admin) throw new ConvexError("You must be an admin to perform this action");
 
     await ctx.db.delete(access.file._id);
   },
