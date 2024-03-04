@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Doc, Id } from "../../../../../../convex/_generated/dataModel";
+import { Protect } from "@clerk/nextjs";
+import { Doc } from "../../../../../../convex/_generated/dataModel";
 
 import { ImageIcon, FileTextIcon, GanttChartIcon } from "lucide-react";
 
@@ -12,11 +13,10 @@ import {
     CardFooter,
     CardContent,
 } from "@/components/ui/card";
-import { FileDelete } from "./file-delete";
-import { Button } from "@/components/ui/button";
+import { DeleteButton } from "./delete-button";
 import { getFileUrl } from "@/lib/get-file-url";
-import { FileFavorite } from "./file-favorite";
-import { Protect } from "@clerk/nextjs";
+import { FavoriteButton } from "./favorite-button";
+import { DownloadButton } from "./download-button";
 
 const typeIcons = {
     image: <ImageIcon className="h-5 w-5" />,
@@ -49,10 +49,10 @@ export const FileCard = ({ file, favorites }: FileCardProps) => {
                 {/* TODO: Find a way to snapshot the pdf and csv to display the preview */}
             </CardContent>
             <CardFooter className="flex items-center justify-center w-full gap-x-1 p-2 ">
-                <FileFavorite file={file} isFavorited={isFavorited} />
-                <Button size="sm" className="flex w-full items-center text-center text-sm gap-x-2 text-white bg-primary-color/80 hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400" onClick={() => { window.open(getFileUrl(file.fileId), "_blank") }} >Download</Button>
+                <FavoriteButton file={file} isFavorited={isFavorited} />
+                <DownloadButton file={file} />
                 <Protect role="org:admin" fallback={<></>}>
-                    <FileDelete fileId={file._id} />
+                    <DeleteButton fileId={file._id} />
                 </Protect>
             </CardFooter>
         </Card>

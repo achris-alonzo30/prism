@@ -83,6 +83,7 @@ export const getFiles = query({
     orgId: v.string(),
     query: v.optional(v.string()),
     favorites: v.optional(v.boolean()),
+    deletes: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const hasAccess = await orgAccess(args.orgId, ctx);
@@ -115,6 +116,10 @@ export const getFiles = query({
       );
     }
 
+    if (args.deletes) {
+      files = files.filter((file) => file.markedForDeletion);
+    }
+
     return files;
   },
 });
@@ -130,7 +135,9 @@ export const deleteFile = mutation({
 
     if (!admin) throw new ConvexError("You must be an admin to perform this action");
 
-    await ctx.db.delete(access.file._id);
+    await ctx.db.patch(args.fileId, {
+      markedForDeletion: true,
+    });
   },
 });
 

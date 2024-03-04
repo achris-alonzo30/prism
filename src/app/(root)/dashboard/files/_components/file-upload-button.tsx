@@ -38,7 +38,7 @@ const formSchema = z.object({
     file: z.custom<FileList>((val) => val instanceof FileList, "File is required").refine((files) => files.length > 0, "File is required"),
 })
 
-export const FileUpload = () => {
+export const FileUploadButton = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const user = useUser();
@@ -80,7 +80,6 @@ export const FileUpload = () => {
             const { storageId } = await result.json();
 
             const types = {
-                "image/png": "image",
                 "image/png": "image",
                 "image/jpg": "image",
                 "image/jpeg": "image",

@@ -6,10 +6,10 @@ import { useOrganization, useUser } from "@clerk/nextjs";
 import { api } from "../../../../../convex/_generated/api";
 
 import { Loader } from "@/components/loader";
-import { EmptyFile } from "../files/_components/empty-file";
-import { FileUpload } from '@/app/(root)/dashboard/files/_components/file-upload';
+import { EmptyFileMessage } from "../files/_components/empty-file-message";
 import { FileCard } from "@/app/(root)/dashboard/files/_components/file-card";
 import { SearchBar } from "@/app/(root)/dashboard/files/_components/search-bar";
+import { FileUploadButton } from '@/app/(root)/dashboard/files/_components/file-upload-button';
 
 type BrowserProps = {
     title: string;
@@ -38,7 +38,7 @@ export default function Browser({ title, favoriteFilter, deleteFilter }: Browser
                 <h1 className="text-2xl font-semibold">{title}</h1>
                 <div className="flex items-center gap-x-2">
                     <SearchBar setQuery={setQuery} query={query} />
-                    <FileUpload />
+                    <FileUploadButton />
                 </div>
             </div>
 
@@ -50,7 +50,7 @@ export default function Browser({ title, favoriteFilter, deleteFilter }: Browser
                 ))}
             </div>
 
-            {!isLoading && files.length === 0 && <EmptyFile />}
+            {!isLoading && files.length === 0 && <EmptyFileMessage />}
         </>
     )
 }

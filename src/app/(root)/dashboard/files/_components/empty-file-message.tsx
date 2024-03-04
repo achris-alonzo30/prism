@@ -1,5 +1,5 @@
 import Image from "next/image";
-export const EmptyFile = () => {
+export const EmptyFileMessage = () => {
     return (
         <div className="flex flex-col items-center justify-center mx-auto space-y-4 w-full">
             <Image src="/empty-file.svg" alt="No files" width={200} height={200} />

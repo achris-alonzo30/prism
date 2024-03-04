@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useMutation } from "convex/react";
+import { useRouter } from "next/navigation";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
 
-import { Trash } from "lucide-react";
 
 import {
     AlertDialog,
@@ -19,13 +19,14 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { ActionTooltip } from "../../../../../components/action-tooltip";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 
 
-export const FileDelete = ({ fileId }: { fileId: Id<"files"> }) => {
+export const DeleteButton = ({ fileId }: { fileId: Id<"files"> }) => {
     const [isOpen, setIsOpen] = useState(false);
+
+    const router = useRouter();
     const { toast } = useToast();
 
     const deleteFile = useMutation(api.files.deleteFile);
@@ -49,10 +50,10 @@ export const FileDelete = ({ fileId }: { fileId: Id<"files"> }) => {
                         onClick={() => {
                             deleteFile({ fileId });
                             toast({
-                                title: "File Deleted Successfully",
-                                description: "Your file has been deleted",
+                                title: "File Is Successfully Marked For Deletion",
+                                description: "Your file is now marked for deletion.",
                                 variant: "default",
-                                action: <ToastAction altText={"Dismiss"} >Dismiss</ToastAction>
+                                action: <ToastAction altText={"Go To"} onClick={() => router.push("/dashboard/trash")} >Go To</ToastAction>
                             })
                         }}
                     >
