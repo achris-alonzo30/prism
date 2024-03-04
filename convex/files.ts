@@ -26,11 +26,11 @@ async function orgAccess(
 }
 
 export const createFile = mutation({
-  args: { 
-    fileName: v.string(), 
-    orgId: v.string(), 
+  args: {
+    fileName: v.string(),
+    orgId: v.string(),
     fileId: v.id("_storage"),
-    fileType: fileTypes
+    fileType: fileTypes,
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -54,13 +54,16 @@ export const createFile = mutation({
       name: args.fileName,
       orgId: args.orgId,
       fileId: args.fileId,
-      fileType: args.fileType
+      fileType: args.fileType,
     });
   },
 });
 
 export const getFiles = query({
-  args: { orgId: v.string() },
+  args: {
+    orgId: v.string(),
+    query: v.optional(v.string()),
+  },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
 
@@ -74,10 +77,20 @@ export const getFiles = query({
 
     if (!hasAccess) return [];
 
-    return ctx.db
+    const files = await ctx.db
       .query("files")
       .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
       .collect();
+
+    const query = args.query;
+
+    if (query) {
+      return files.filter((file) =>
+        file.name.toLowerCase().includes(query.toLowerCase())
+      );
+    } else {
+      return files;
+    }
   },
 });
 
