@@ -8,7 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { api } from "../../../../../../convex/_generated/api";
 import { Doc } from "../../../../../../convex/_generated/dataModel";
 
-export const FavoriteButton = ({ file, isFavorited }: { file: Doc<"files">; isFavorited: boolean }) => {
+export const FavoriteButton = ({ file}: { file: Doc<"files"> & { isFavorited: boolean } }) => {
     const router = useRouter();
     const { toast } = useToast();
     const toggleFavorite = useMutation(api.files.toggleFavorite);
@@ -27,7 +27,7 @@ export const FavoriteButton = ({ file, isFavorited }: { file: Doc<"files">; isFa
                 })
             }}
         >
-            {isFavorited ? "Unfavorite" : "Favorite"}
+            {file.isFavorited ? "Unfavorite" : "Favorite"}
         </Button>
     )
 }

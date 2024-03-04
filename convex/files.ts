@@ -89,6 +89,7 @@ export const getFiles = query({
     query: v.optional(v.string()),
     favorites: v.optional(v.boolean()),
     deletes: v.optional(v.boolean()),
+    fileType: v.optional(fileTypes)
   },
   handler: async (ctx, args) => {
     const hasAccess = await orgAccess(args.orgId, ctx);
@@ -125,6 +126,10 @@ export const getFiles = query({
       files = files.filter((file) => file.markedForDeletion);
     } else {
       files = files.filter((file) => !file.markedForDeletion);
+    }
+
+    if (args.fileType) {
+      files = files.filter((file) => file.fileType === args.fileType)
     }
 
     return files;

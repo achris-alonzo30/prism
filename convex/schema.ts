@@ -4,7 +4,7 @@ import { defineSchema, defineTable } from "convex/server";
 export const fileTypes = v.union(
   v.literal("image"),
   v.literal("csv"),
-  v.literal("pdf")
+  v.literal("pdf"),
 );
 
 export const roles = v.union(v.literal("admin"), v.literal("member"));

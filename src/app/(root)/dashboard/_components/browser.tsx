@@ -5,11 +5,21 @@ import { useQuery } from "convex/react";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { api } from "../../../../../convex/_generated/api";
 
+import { LayoutGrid, Table } from "lucide-react";
+
+import {
+    Tabs,
+    TabsList,
+    TabsTrigger,
+    TabsContent
+} from "@/components/ui/tabs"
+import { columns } from "./columns";
+import { FileTable } from "./file-table";
 import { Loader } from "@/components/loader";
+import { FileCard } from "@/app/(root)/dashboard/_components/file-card";
+import { SearchBar } from "@/app/(root)/dashboard/_components/search-bar";
 import { EmptyFileMessage } from "../files/_components/empty-file-message";
-import { FileCard } from "@/app/(root)/dashboard/files/_components/file-card";
-import { SearchBar } from "@/app/(root)/dashboard/files/_components/search-bar";
-import { FileUploadButton } from '@/app/(root)/dashboard/files/_components/file-upload-button';
+import { FileUploadButton } from '@/app/(root)/dashboard/_components/file-upload-button';
 
 type BrowserProps = {
     title: string;
@@ -32,6 +42,11 @@ export default function Browser({ title, favoriteFilter, deleteFilter }: Browser
     const files = useQuery(api.files.getFiles, orgId ? { orgId, query, favorites: favoriteFilter, deletes: deleteFilter } : "skip");
 
     const isLoading = files === undefined;
+
+    const modifiedFiles = files?.map((file) => ({
+        ...file,
+        isFavorited: (favorites ?? []).some((favorite) => favorite.fileId === file._id)
+    })) ?? [];
     return (
         <>
             <div className="flex items-center justify-between mb-10 sm:mb-20">
@@ -42,13 +57,27 @@ export default function Browser({ title, favoriteFilter, deleteFilter }: Browser
                 </div>
             </div>
 
-            {isLoading && <Loader />}
+            <Tabs defaultValue="grid" className="w-full">
+                <TabsList className="mb-8">
+                    <TabsTrigger value="grid" className="flex items-center gap-x-2"><LayoutGrid className="h-4 w-4" />Grid View</TabsTrigger>
+                    <TabsTrigger value="table" className="flex items-center gap-x-2"><Table className="h-4 w-4" />Table View</TabsTrigger>
+                </TabsList>
 
-            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3  gap-4">
-                {files?.map((file) => (
-                    <FileCard favorites={favorites ?? []} key={file._id} file={file} />
-                ))}
-            </div>
+                {isLoading && <Loader />}
+
+                <TabsContent value="grid">
+                    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3  gap-4">
+                        {modifiedFiles?.map((file) => (
+                            <FileCard key={file._id} file={file} />
+                        ))}
+                    </div>
+                </TabsContent>
+                <TabsContent value="table">
+                    <FileTable columns={columns} data={modifiedFiles} />
+                </TabsContent>
+            </Tabs>
+
+            
 
             {!isLoading && files.length === 0 && <EmptyFileMessage />}
         </>
