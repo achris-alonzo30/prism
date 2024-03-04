@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { api } from "../../convex/_generated/api";
+import { api } from "../../../../../../convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { useOrganization, useUser } from "@clerk/nextjs";
-import { Doc } from "../../convex/_generated/dataModel";
+import { Doc } from "../../../../../../convex/_generated/dataModel";
 
 
 
@@ -64,8 +64,9 @@ export const FileUpload = () => {
     const isLoading = form.formState.isSubmitting;
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        try {
+        
             if (!orgId) return;
+
             const postUrl = await generateUploadUrl();
 
             const fileType = data.file[0].type;
@@ -80,10 +81,15 @@ export const FileUpload = () => {
 
             const types = {
                 "image/png": "image",
+                "image/png": "image",
+                "image/jpg": "image",
+                "image/jpeg": "image",
+                "image/avif": "image",
+                "image/webp": "image",
                 "application/pdf": "pdf",
                 "text/csv": "csv"
             } as Record<string, Doc<"files">["fileType"]>;
-
+        try {
             await createFile({
                 fileName: data.fileName,
                 fileId: storageId,
@@ -92,7 +98,9 @@ export const FileUpload = () => {
             })
 
             form.reset();
+
             setIsOpen(false);
+
             toast({
                 title: "File uploaded.",
                 description: "File uploaded successfully.",

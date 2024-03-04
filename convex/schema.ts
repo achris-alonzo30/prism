@@ -6,13 +6,19 @@ export const fileTypes = v.union(v.literal("image"), v.literal("csv"), v.literal
 export default defineSchema({
     files: defineTable({
         name: v.string(),
-        fileType: fileTypes,
         orgId: v.string(),
+        fileType: fileTypes,
         fileId: v.id("_storage"),
     }).index("by_orgId", ["orgId"]),
 
     users: defineTable({
         tokenIdentifier: v.string(),
-        orgIds: v.array(v.string())
-    }).index("by_tokenIdentifier", ["tokenIdentifier"])
+        orgIds: v.array(v.string()),
+    }).index("by_tokenIdentifier", ["tokenIdentifier"]),
+
+    favorites: defineTable({
+        orgId: v.string(),
+        fileId: v.id("files"),
+        userId: v.id("users"),
+    }).index("by_userId_orgId_fileId", ["userId", "orgId", "fileId"]),
 })

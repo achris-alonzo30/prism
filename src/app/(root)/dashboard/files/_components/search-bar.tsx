@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
-import { api } from "../../convex/_generated/api";
+import { api } from "../../../../../../convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
