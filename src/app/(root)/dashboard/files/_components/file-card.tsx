@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Doc } from "../../../../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../../../../convex/_generated/dataModel";
 
 import { ImageIcon, FileTextIcon, GanttChartIcon } from "lucide-react";
 
@@ -23,8 +23,15 @@ const typeIcons = {
     csv: <GanttChartIcon className="h-5 w-5" />
 } as Record<Doc<"files">["fileType"], React.ReactNode>;
 
+type FileCardProps = {
+    file: Doc<"files">;
+    favorites: Doc<"favorites">[];
+}
 
-export const FileCard = ({ file }: { file: Doc<"files"> }) => {
+export const FileCard = ({ file, favorites }: FileCardProps) => {
+
+    const isFavorited = favorites.some((favorite) => favorite.fileId === file._id)
+
     return (
         <Card>
             <CardHeader>
@@ -38,11 +45,11 @@ export const FileCard = ({ file }: { file: Doc<"files"> }) => {
                 {file.fileType === "image" && (
                     <Image src={getFileUrl(file.fileId)} alt="File preview" width={300} height={300} className="object-cover aspect-square" />
                 )}
-                 {/* TODO: Find a way to snapshot the pdf and csv to display the preview */}
+                {/* TODO: Find a way to snapshot the pdf and csv to display the preview */}
             </CardContent>
             <CardFooter className="flex items-center justify-center w-full gap-x-1 p-2 ">
-                <FileFavorite file={file} />
-                <Button size="sm" className="flex w-full items-center text-center text-sm gap-x-2 text-white bg-primary-color/80 hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400" onClick={() => { window.open(getFileUrl(file.fileId), "_blank")}} >Download</Button>
+                <FileFavorite file={file} isFavorited={isFavorited} />
+                <Button size="sm" className="flex w-full items-center text-center text-sm gap-x-2 text-white bg-primary-color/80 hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400" onClick={() => { window.open(getFileUrl(file.fileId), "_blank") }} >Download</Button>
                 <FileDelete fileId={file._id} />
             </CardFooter>
         </Card>

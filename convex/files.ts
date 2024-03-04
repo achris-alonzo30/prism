@@ -173,7 +173,7 @@ export const getAllFavorite = query({
           .eq("userId", hasAccess.user._id)
           .eq("orgId", args.orgId)
       )
-      .first();
+      .collect();
 
     return favorites;
   },
