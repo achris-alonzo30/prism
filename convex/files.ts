@@ -1,7 +1,3 @@
-import { getUser } from "./users";
-import { fileTypes } from "./schema";
-import { Id } from "./_generated/dataModel";
-import { ConvexError, v } from "convex/values";
 import {
   MutationCtx,
   QueryCtx,
@@ -9,6 +5,10 @@ import {
   mutation,
   query,
 } from "./_generated/server";
+import { fileTypes } from "./schema";
+import { ConvexError, v } from "convex/values";
+import { Doc, Id } from "./_generated/dataModel";
+
 
 // STORAGE FILE UPLOADS
 export const generateUploadUrl = mutation(async (ctx) => {
@@ -153,6 +153,15 @@ export const deleteFilePeriodically = internalMutation({
   },
 });
 
+function canDeleteFile(user: Doc<"users">, file: Doc<"files">) {
+  const canDelete = file.userId === user._id ||
+      user.orgIds.find((org) => org.orgId === file.orgId)
+        ?.role === "admin";
+
+    if (!canDelete)
+      throw new ConvexError("You have no access to perform this actions.");
+}
+
 export const deleteFile = mutation({
   args: { fileId: v.id("files") },
   handler: async (ctx, args) => {
@@ -160,12 +169,7 @@ export const deleteFile = mutation({
 
     if (!access) throw new ConvexError("File not found");
 
-    const admin =
-      access.user.orgIds.find((org) => org.orgId === access.file.orgId)
-        ?.role === "admin";
-
-    if (!admin)
-      throw new ConvexError("You must be an admin to perform this action");
+    canDeleteFile(access.user, access.file);
 
     await ctx.db.patch(args.fileId, {
       markedForDeletion: true,
@@ -180,12 +184,7 @@ export const restoreFile = mutation({
 
     if (!access) throw new ConvexError("File not found");
 
-    const admin =
-      access.user.orgIds.find((org) => org.orgId === access.file.orgId)
-        ?.role === "admin";
-
-    if (!admin)
-      throw new ConvexError("You must be an admin to perform this action");
+    canDeleteFile(access.user, access.file);
 
     await ctx.db.patch(args.fileId, {
       markedForDeletion: false,
