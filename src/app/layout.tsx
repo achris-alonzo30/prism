@@ -1,7 +1,6 @@
 import "./globals.css";
-import { cn } from '../lib/utils';
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { cn, constructMetadata } from '../lib/utils';
 
 import { Header } from "@/components/header";
 import { Toaster } from "@/components/ui/toaster";
@@ -10,13 +9,7 @@ import ConvexClientProvider from "@/providers/convex-client-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Prism",
-  description: "A real-time storage and retrieval tool",
-  icons: {
-    icon: "/logo.svg"
-  }
-};
+export const metadata = constructMetadata()
 
 export default function RootLayout({
   children,
