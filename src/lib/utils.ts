@@ -38,7 +38,7 @@ export function constructMetadata({
       creator: "@chrislonzo"
     },
     icons,
-    // metadataBase: new URL(''),
+    metadataBase: new URL('https://prism-silk.vercel.app'),
     themeColor: '##2bf8b5',
     ...(noIndex && {
       robots: {
