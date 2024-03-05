@@ -21,6 +21,7 @@ import { getFileUrl } from "@/lib/get-file-url";
 import { FavoriteButton } from "../files/_components/favorite-button";
 import { DownloadButton } from "../files/_components/download-button";
 import { ActionTooltip } from "@/components/action-tooltip";
+import Link from "next/link";
 
 const typeIcons = {
     image: <ImageIcon className="h-5 w-5" />,
@@ -48,15 +49,21 @@ export const FileCard = ({ file }: {file: Doc<"files"> & { isFavorited: boolean}
                     </ActionTooltip>
                 </CardTitle>
             </CardHeader>
-            <CardContent className="flex justify-center items-center  w-auto" >
+            <CardContent className="flex justify-center items-center w-auto" >
                 {file.fileType === "image" && (
                     <Image src={getFileUrl(file.fileId)} alt="File preview" width={300} height={300} className="object-cover aspect-square rounded-md" />
                 )}
                 {/* TODO: Find a way to snapshot the pdf and csv to display the preview */}
+                {file.fileType === "pdf" && (
+                    <FileTextIcon className="w-24 h-24 text-center" />
+                )}
             </CardContent>
             <CardFooter className="flex flex-col space-y-2 p-2">
                 
                 <div className="flex items-center justify-center w-full gap-x-1">
+                {file.fileType === "pdf" && (
+                    <Link href={`/chat/${file.fileId}`} className="text-xs font-semibold text-primary-color/80 hover:text-primary-color/90 transform hover:-translate-y-1 transition-all duration-400">Start Chatting</Link>
+                )}
                 {file.markedForDeletion ? (
                     <Protect role="org:admin" fallback={<></>}>
                         <DeleteButton file={file} />

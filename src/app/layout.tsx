@@ -7,6 +7,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/providers/theme-provider";
 import ConvexClientProvider from "@/providers/convex-client-provider";
 
+import 'simplebar-react/dist/simplebar.min.css';
+import 'react-loading-skeleton/dist/skeleton.css';
+
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = constructMetadata()

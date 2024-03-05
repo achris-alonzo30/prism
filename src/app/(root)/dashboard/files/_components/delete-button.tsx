@@ -71,7 +71,7 @@ export const DeleteButton = ({ file }: { file: Doc<"files"> }) => {
                             await deleteFile({ fileId: file._id });
                             toast({
                                 title: "File Is Successfully Marked For Deletion",
-                                description: "Your file is now marked for deletion.",
+                                description: "Our system will delete your file under a minute you still have a chance to restore it.",
                                 variant: "default",
                                 action: <ToastAction altText={"Go To"} onClick={() => router.push("/dashboard/trash")} >Go To</ToastAction>
                             })

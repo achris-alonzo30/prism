@@ -1,13 +1,15 @@
 "use client";
 
 import * as z from "zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { api } from "../../../../../convex/_generated/api";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useOrganization, useUser } from "@clerk/nextjs";
+import { api } from "../../../../../convex/_generated/api";
+import { Doc } from "../../../../../convex/_generated/dataModel";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Inbox } from "lucide-react";
 
 import {
     Form,
@@ -26,11 +28,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-import { useOrganization, useUser } from "@clerk/nextjs";
-import { Doc } from "../../../../../convex/_generated/dataModel";
-
 
 
 const formSchema = z.object({
@@ -60,34 +60,36 @@ export const FileUploadButton = () => {
         },
     })
 
-    const fileRef = form.register("file");
+    const fileRef = form.register("file", {
+        required: true,
+    });
+
     const isLoading = form.formState.isSubmitting;
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        
-            if (!orgId) return;
+        if (!orgId) return;
 
-            const postUrl = await generateUploadUrl();
+        const postUrl = await generateUploadUrl();
 
-            const fileType = data.file[0].type;
+        const fileType = data.file[0].type;
 
-            const result = await fetch(postUrl, {
-                method: "POST",
-                headers: { "Content-Type": fileType },
-                body: data.file[0]
-            })
+        const result = await fetch(postUrl, {
+            method: "POST",
+            headers: { "Content-Type": fileType },
+            body: data.file[0]
+        })
 
-            const { storageId } = await result.json();
+        const { storageId } = await result.json();
 
-            const types = {
-                "image/png": "image",
-                "image/jpg": "image",
-                "image/jpeg": "image",
-                "image/avif": "image",
-                "image/webp": "image",
-                "application/pdf": "pdf",
-                "text/csv": "csv"
-            } as Record<string, Doc<"files">["fileType"]>;
+        const types = {
+            "image/png": "image",
+            "image/jpg": "image",
+            "image/jpeg": "image",
+            "image/avif": "image",
+            "image/webp": "image",
+            "application/pdf": "pdf",
+            "text/csv": "csv"
+        } as Record<string, Doc<"files">["fileType"]>;
         try {
             await createFile({
                 fileName: data.fileName,
@@ -106,6 +108,7 @@ export const FileUploadButton = () => {
                 variant: "success",
                 action: <ToastAction altText={"Dismiss"} >Dismiss</ToastAction>
             })
+
         } catch (error) {
             console.error(error)
             toast({
@@ -114,6 +117,8 @@ export const FileUploadButton = () => {
                 variant: "destructive",
                 action: <ToastAction altText={"Dismiss"} >Dismiss</ToastAction>
             })
+        } finally {
+            setIsOpen(false);
         }
     }
 
@@ -131,7 +136,7 @@ export const FileUploadButton = () => {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Upload File</DialogTitle>
+                    <DialogTitle className="text-center">Upload File</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                     <Form {...form}>
@@ -143,7 +148,7 @@ export const FileUploadButton = () => {
                                     <FormItem>
                                         <FormLabel>File Name</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="File Name" {...field} />
+                                            <Input placeholder="File Name"  {...field} required />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -156,11 +161,14 @@ export const FileUploadButton = () => {
                                     <FormItem>
                                         <FormLabel>File</FormLabel>
                                         <FormControl>
-                                            <Input
-                                                type="file"
-                                                {...fileRef}
-                                                className="cursor-pointer"
-                                            />
+                                            <div className='flex items-center justify-center h-full w-full'>
+                                                <Input
+                                                    id="file-upload"
+                                                    type="file"
+                                                    {...fileRef}
+                                                    className="cursor-pointer"
+                                                />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -168,7 +176,7 @@ export const FileUploadButton = () => {
                             />
                             <div className="flex justify-end gap-x-2 mt-2">
                                 <Button type="button" onClick={() => setIsOpen(false)} variant="ghost" size="sm" className="rounded-md" >Cancel</Button>
-                                <Button type="submit" disabled={isLoading} className="flex items-center text-sm gap-x-2 text-black bg-primary-color hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400" size="sm">
+                                <Button type="submit" disabled={isLoading} className="flex items-center text-sm gap-x-2 text-white bg-primary-color/80 hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400" size="sm">
                                     {isLoading ? (
                                         <span className="flex items-center gap-x-2">
                                             <Loader2 className="h-4 w-4 animate-spin" />

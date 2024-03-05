@@ -8,10 +8,7 @@ import {
     OrganizationSwitcher,
 } from "@clerk/nextjs";
 
-import { ArrowRightIcon } from "lucide-react";
-
 import { Logo } from "./logo";
-import { ModeToggle } from "./mode-toggle";
 import { Button } from "@/components/ui/button";
 
 
