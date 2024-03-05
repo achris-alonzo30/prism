@@ -125,7 +125,7 @@ export const FileUploadButton = () => {
                 form.reset();
             }}>
             <DialogTrigger asChild>
-                <Button className="flex items-center text-black text-sm gap-x-2  bg-primary-color hover:bg-primary-color/80 transform hover:-translate-y-1 transition-all duration-400" >
+                <Button className="flex items-center text-white text-sm gap-x-2  bg-primary-color/80 hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400" >
                     Upload File
                 </Button>
             </DialogTrigger>

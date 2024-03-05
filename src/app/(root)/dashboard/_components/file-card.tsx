@@ -71,7 +71,7 @@ export const FileCard = ({ file }: {file: Doc<"files"> & { isFavorited: boolean}
                     </>
                 )}
                 </div>
-                <p className="text-xs text-secondary-color font-semibold">Uploaded on {formatRelative(new Date(file._creationTime), new Date())}</p>
+                <p className="text-xs text-hover-primary-color font-semibold capitalize">Uploaded <strong className="font-semibold">{formatRelative(new Date(file._creationTime), new Date())}</strong></p>
             </CardFooter>
         </Card>
     )

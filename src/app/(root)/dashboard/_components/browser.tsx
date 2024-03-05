@@ -18,6 +18,7 @@ import {
     Select,
     SelectItem,
     SelectValue,
+    SelectGroup,
     SelectContent,
     SelectTrigger,
 } from "@/components/ui/select";
@@ -61,29 +62,33 @@ export default function Browser({ title, favoriteFilter, deleteFilter }: Browser
     return (
         <>
             <div className="flex items-center justify-between mb-10 sm:mb-20">
-                <h1 className="text-2xl font-semibold">{title}</h1>
+                <h1 className="text-2xl sm:text-4xl font-semibold">{title}</h1>
                 <div className="flex items-center gap-x-2">
                     <SearchBar setQuery={setQuery} query={query} />
                     <FileUploadButton />
                 </div>
             </div>
 
-            <Tabs defaultValue="grid" className="w-full">
-                <div className="flex items-center justify-between">
-                    <TabsList className="mb-8">
+            <Tabs defaultValue="grid" >
+                <div className="flex items-center justify-between mb-8">
+                    <TabsList className="bg-background">
                         <TabsTrigger value="grid" className="flex items-center gap-x-2"><LayoutGrid className="h-4 w-4" />Grid View</TabsTrigger>
                         <TabsTrigger value="table" className="flex items-center gap-x-2"><Table className="h-4 w-4" />Table View</TabsTrigger>
                     </TabsList>
+                    <div className="flex items-center">
                     <Select value={type} onValueChange={(type) => { setType(type as any) }}>
                         <SelectTrigger>
-                            <SelectValue placeholder="Filter by file type" />
+                            <SelectValue placeholder="Filter " />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Image</SelectItem>
-                            <SelectItem value="">CSV</SelectItem>
-                            <SelectItem value="">PDF</SelectItem>
+                            <SelectGroup>
+                            <SelectItem value="image">Image</SelectItem>
+                            <SelectItem value="csv">CSV</SelectItem>
+                            <SelectItem value="pdf">PDF</SelectItem>
+                            </SelectGroup>
                         </SelectContent>
                     </Select>
+                    </div>
                 </div>
 
                 {isLoading && <Loader />}

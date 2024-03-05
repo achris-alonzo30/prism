@@ -50,20 +50,20 @@ export const SearchBar = ({ setQuery, query }: { query: string, setQuery: Dispat
     }
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center w-full transform hover:-translate-y-1 transition-all duration-400">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center w-full group transform hover:-translate-y-1 transition-all duration-400">
                 <FormField
                     control={form.control}
                     name="query"
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <input placeholder="Search" {...field} className="flex h-10 w-full rounded-s-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" dir="ltr" />
+                                <input placeholder="Search" {...field} className="flex h-10 w-full rounded-s-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50" dir="ltr" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                <button type="submit" className="inline-flex items-center h-10 px-3 py-2 bg-primary-color hover:bg-primary-color/80 justify-center whitespace-nowrap rounded-s-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" dir="rtl"><Search className="h-4 w-4 text-black" /></button>
+                <button type="submit" className="inline-flex items-center h-10 px-3 py-2 bg-primary-color/80 hover:bg-primary-color/90 justify-center whitespace-nowrap rounded-s-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" dir="rtl"><Search className="h-4 w-4 text-white" /></button>
             </form>
 
         </Form>

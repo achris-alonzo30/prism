@@ -19,7 +19,7 @@ function UserCell({ userId }: { userId: Id<"users"> }) {
         <AvatarImage src={userProfile?.profileImage} />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
-      {userProfile?.name}
+      <p className="text-foreground capitalize text-sm">{userProfile?.name}</p>
     </div>
   );
 }
@@ -30,7 +30,7 @@ export const columns: ColumnDef<Doc<"files"> & { isFavorited: boolean }>[] = [
     header: "Name",
   },
   {
-    accessorKey: "type",
+    accessorKey: "fileType",
     header: "Type",
   },
   {

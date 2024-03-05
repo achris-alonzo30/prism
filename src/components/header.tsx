@@ -31,18 +31,17 @@ export const Header = () => {
                                     organizationSwitcherPopoverCard: "bg-white",
                                 },
                             }} />
-                            <UserButton afterSignOutUrl="/" />
+                            <UserButton afterSignOutUrl="/"  />
                         </div>
                     </SignedIn>
                     <SignedOut>
                         <SignInButton>
                             <Button className="flex items-center text-sm gap-x-2 text-black bg-primary-color hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400" size="sm">
-                                Get Started
+                                Sign Up
                                 <ArrowRightIcon className="h-4 w-4" />
                             </Button>
                         </SignInButton>
                     </SignedOut>
-                    <ModeToggle />
                 </div>
             </div>
 

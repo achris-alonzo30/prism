@@ -20,8 +20,9 @@ const config = {
     extend: {
       colors: {
         "primary-color": "#2bf8b5",
-        "secondary-color": "#ec277a",
-        "highlight-color": "#570c55",
+        "hover-primary-color": "#52A287",
+        "secondary-color": "#D32AF7",
+        "highlight-color": "#715078",
 
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -71,10 +72,19 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "background-shine": {
+          "from": {
+            "backgroundPosition": "0 0"
+          },
+          "to": {
+            "backgroundPosition": "-200% 0"
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "background-shine": "background-shine 2s linear infinite"
       },
     },
   },
