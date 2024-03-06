@@ -1,7 +1,15 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, BotMessageSquare, Hourglass, Users, Zap } from 'lucide-react';
+
+import { 
+  Zap,
+  Users,
+  Hourglass,
+  ArrowRight, 
+  BotMessageSquare,    
+} from 'lucide-react';
+
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import { TextGenerateEffect } from '@/components/animated-ui/text-generate-effect';
@@ -12,7 +20,7 @@ export default function Home() {
   return (
     <>
       <main className='mx-auto w-full max-w-screen-xl px-2.5 md:px-20 mb-12 mt-12 sm:mt-26 flex flex-col items-center justify-center text-center'>
-        <div className='flex h-8 animate-background-shine items-center justify-center rounded-md border border-gray-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50 transform hover:-translate-y-1 transition-all duration-400'>
+        <div className='flex h-8 animate-background-shine items-center justify-center rounded-md border border-gray-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6  focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50 transform hover:-translate-y-1 transition-all duration-400'>
           <p className='text-sm font-semibold text-primary-color'>
             Prism v.0.0.1
           </p>

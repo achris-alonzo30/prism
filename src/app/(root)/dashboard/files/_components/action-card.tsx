@@ -69,7 +69,7 @@ export const ActionCard = ({
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                    <AlertDialogCancel className="transform hover:-translate-y-1 transition-all duration-400" onClick={() => setIsOpen(false)}>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel className="transform hover:-translate-y-1 transition-all duration-400" onClick={() => setIsConfirmOpen(false)}>Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={async () => {
                                 await deleteFile({
