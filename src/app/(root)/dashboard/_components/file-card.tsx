@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { Protect } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { formatRelative } from "date-fns";
+import { getFileUrl } from "@/lib/get-file-url";
 import { api } from "../../../../../convex/_generated/api";
 import { Doc } from "../../../../../convex/_generated/dataModel";
 
@@ -16,12 +16,9 @@ import {
     CardFooter,
     CardContent,
 } from "@/components/ui/card";
-import { DeleteButton } from "../files/_components/delete-button";
-import { getFileUrl } from "@/lib/get-file-url";
-import { FavoriteButton } from "../files/_components/favorite-button";
-import { DownloadButton } from "../files/_components/download-button";
 import { ActionTooltip } from "@/components/action-tooltip";
-import Link from "next/link";
+import { ActionCard } from "../files/_components/action-card";
+
 
 const typeIcons = {
     image: <ImageIcon className="h-5 w-5" />,
@@ -29,9 +26,11 @@ const typeIcons = {
     csv: <GanttChartIcon className="h-5 w-5" />
 } as Record<Doc<"files">["fileType"], React.ReactNode>;
 
-
-
-export const FileCard = ({ file }: {file: Doc<"files"> & { isFavorited: boolean}}) => {
+export const FileCard = ({
+    file,
+}: { 
+    file: Doc<"files"> & { isFavorited: boolean}; 
+}) => {
 
     const userProfile = useQuery(api.users.getUserProfile, { userId: file.userId });
 
@@ -40,13 +39,10 @@ export const FileCard = ({ file }: {file: Doc<"files"> & { isFavorited: boolean}
             <CardHeader>
                 {/* TODO: Redesign this part */}
                 <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center gap-x-2">
-                        {typeIcons[file.fileType]}
-                        <p className="text-base font-bold truncate">{file.name}</p>
-                    </div>
                     <ActionTooltip title={userProfile?.name ?? ""}>
                         <Image src={userProfile?.profileImage!} alt="profile image" width={30} height={30} className="object-cover aspect-square rounded-full" />
                     </ActionTooltip>
+                    <ActionCard file={file} isFavorited={file.isFavorited} />
                 </CardTitle>
             </CardHeader>
             <CardContent className="flex justify-center items-center w-auto" >
@@ -55,28 +51,13 @@ export const FileCard = ({ file }: {file: Doc<"files"> & { isFavorited: boolean}
                 )}
                 {/* TODO: Find a way to snapshot the pdf and csv to display the preview */}
                 {file.fileType === "pdf" && (
-                    <FileTextIcon className="w-24 h-24 text-center" />
+                    <FileTextIcon className="w-24 h-24 text-center justify-center my-12" />
                 )}
             </CardContent>
-            <CardFooter className="flex flex-col space-y-2 p-2">
-                
-                <div className="flex items-center justify-center w-full gap-x-1">
-                {file.fileType === "pdf" && (
-                    <Link href={`/chat/${file.fileId}`} className="text-xs font-semibold text-primary-color/80 hover:text-primary-color/90 transform hover:-translate-y-1 transition-all duration-400">Start Chatting</Link>
-                )}
-                {file.markedForDeletion ? (
-                    <Protect role="org:admin" fallback={<></>}>
-                        <DeleteButton file={file} />
-                    </Protect>
-                ) : (
-                    <>
-                        <FavoriteButton file={file} />
-                        <DownloadButton file={file} />
-                        <Protect role="org:admin" fallback={<></>}>
-                            <DeleteButton file={file} />
-                        </Protect>
-                    </>
-                )}
+            <CardFooter className="flex flex-col space-y-2 p-2 pt-auto">
+                <div className="flex items-center gap-x-2">
+                    {typeIcons[file.fileType]}
+                    <p className="text-base font-bold truncate">{file.name}</p>
                 </div>
                 <p className="text-xs text-hover-primary-color font-semibold capitalize">Uploaded <strong className="font-semibold">{formatRelative(new Date(file._creationTime), new Date())}</strong></p>
             </CardFooter>

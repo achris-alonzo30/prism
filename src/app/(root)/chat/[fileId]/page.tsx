@@ -72,7 +72,7 @@ const PDFRendererPage = ({ params }: { params: { fileId: Id<"_storage"> } }) => 
     return (
         <div className="w-full rounded-md shadow-md flex flex-col items-center">
             <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between">
-                <div className="flex items-center gap-x-2">
+                <div className="flex items-center space-x-2 px-4">
                     <Button
                         size="sm"
                         variant="ghost"
@@ -83,7 +83,7 @@ const PDFRendererPage = ({ params }: { params: { fileId: Id<"_storage"> } }) => 
                         }}
                         disabled={currPage === 1}
                     >
-                        <ChevronDown className="h-4 w-4" />
+                        <ChevronUp className="h-4 w-4" />
                     </Button>
                     <div className="flex items-center gap-x-2">
                         <Input
@@ -110,11 +110,11 @@ const PDFRendererPage = ({ params }: { params: { fileId: Id<"_storage"> } }) => 
                         }}
                         disabled={currPage === pageNumber || pageNumber === undefined || pageNumber === 0}
                     >
-                        <ChevronUp className="h-4 w-4" />
+                        <ChevronDown className="h-4 w-4" />
                     </Button>
                 </div>
 
-                <div className="space-x-2">
+                <div className="space-x-2 px-4">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button aria-label="zoom" variant="ghost" size="sm" className="gap-2">
