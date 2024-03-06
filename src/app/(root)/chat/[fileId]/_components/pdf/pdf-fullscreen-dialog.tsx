@@ -8,7 +8,7 @@ import { Document, Page } from "react-pdf";
 import { Expand, Loader } from 'lucide-react';
 import { getFileUrl } from '@/lib/get-file-url';
 import { useResizeDetector } from 'react-resize-detector';
-import { Id } from '../../../../../../convex/_generated/dataModel';
+import { Id } from '../../../../../../../convex/_generated/dataModel';
 
 import {
     Dialog,

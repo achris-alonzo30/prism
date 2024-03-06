@@ -33,6 +33,7 @@ export default function Home() {
           <Link
             className="flex items-center gap-x-2"
             href='/dashboard/files'
+          >
             Get started
             <ArrowRight className='h-5 w-5' />
           </Link>
