@@ -70,24 +70,24 @@ export const ActionColumns = ({
                               </AlertDialogDescription>
                          </AlertDialogHeader>
                          <AlertDialogFooter>
-                    <AlertDialogCancel className="transform hover:-translate-y-1 transition-all duration-400" onClick={() => setIsOpen(false)}>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={async () => {
-                                await deleteFile({
-                                    fileId: file._id,
-                                });
-                                toast({
-                                    title: "File Is Marked For Deletion",
-                                    description: "Our system will delete your file under a minute and you still have a chance to restore it.",
-                                    variant: "default",
-                                    action: <ToastAction altText={"Go To"} onClick={() => router.push("/dashboard/trash")} >Go To</ToastAction>
-                                })
-                            }}
-                            className="bg-primary-color/80 text-white hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400"
-                        >
-                            Continue
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
+                              <AlertDialogCancel className="transform hover:-translate-y-1 transition-all duration-400" onClick={() => setIsConfirmOpen(false)}>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                   onClick={async () => {
+                                        await deleteFile({
+                                             fileId: file._id,
+                                        });
+                                        toast({
+                                             title: "File Is Marked For Deletion",
+                                             description: "Our system will delete your file under a minute and you still have a chance to restore it.",
+                                             variant: "default",
+                                             action: <ToastAction altText={"Go To"} onClick={() => router.push("/dashboard/trash")} >Go To</ToastAction>
+                                        })
+                                   }}
+                                   className="bg-primary-color/80 text-white hover:bg-primary-color/90 transform hover:-translate-y-1 transition-all duration-400"
+                              >
+                                   Continue
+                              </AlertDialogAction>
+                         </AlertDialogFooter>
                     </AlertDialogContent>
                </AlertDialog>
 
