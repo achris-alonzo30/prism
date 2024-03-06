@@ -80,7 +80,9 @@ export const FileUploadButton = () => {
         })
 
         const { storageId } = await result.json();
-
+        
+        console.log("StorageId: ", storageId);
+        
         const types = {
             "image/png": "image",
             "image/jpg": "image",
@@ -90,6 +92,8 @@ export const FileUploadButton = () => {
             "application/pdf": "pdf",
             "text/csv": "csv"
         } as Record<string, Doc<"files">["fileType"]>;
+
+
         try {
             await createFile({
                 fileName: data.fileName,

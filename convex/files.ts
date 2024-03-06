@@ -9,7 +9,6 @@ import { fileTypes } from "./schema";
 import { ConvexError, v } from "convex/values";
 import { Doc, Id } from "./_generated/dataModel";
 
-
 // STORAGE FILE UPLOADS
 export const generateUploadUrl = mutation(async (ctx) => {
   const identity = await ctx.auth.getUserIdentity();
@@ -89,7 +88,7 @@ export const getFiles = query({
     query: v.optional(v.string()),
     favorites: v.optional(v.boolean()),
     deletes: v.optional(v.boolean()),
-    fileType: v.optional(fileTypes)
+    fileType: v.optional(fileTypes),
   },
   handler: async (ctx, args) => {
     const hasAccess = await orgAccess(args.orgId, ctx);
@@ -129,10 +128,25 @@ export const getFiles = query({
     }
 
     if (args.fileType) {
-      files = files.filter((file) => file.fileType === args.fileType)
+      files = files.filter((file) => file.fileType === args.fileType);
     }
 
     return files;
+  },
+});
+
+export const getFileUrl = query({
+  args: { fileId: v.id("_storage") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new ConvexError("You must be signed in to perform this action");
+    }
+
+    const imageUrl = await ctx.storage.getUrl(args.fileId);
+
+    return imageUrl
   },
 });
 
@@ -154,12 +168,12 @@ export const deleteFilePeriodically = internalMutation({
 });
 
 function canDeleteFile(user: Doc<"users">, file: Doc<"files">) {
-  const canDelete = file.userId === user._id ||
-      user.orgIds.find((org) => org.orgId === file.orgId)
-        ?.role === "admin";
+  const canDelete =
+    file.userId === user._id ||
+    user.orgIds.find((org) => org.orgId === file.orgId)?.role === "admin";
 
-    if (!canDelete)
-      throw new ConvexError("You have no access to perform this actions.");
+  if (!canDelete)
+    throw new ConvexError("You have no access to perform this actions.");
 }
 
 export const deleteFile = mutation({

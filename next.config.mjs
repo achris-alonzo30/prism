@@ -4,7 +4,7 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: "https",
-                hostname: "upbeat-bandicoot-306.convex.cloud",
+                hostname: `${process.env.CONVEX_URL}`,
                 port: "",
                 pathname: "/**",
             },

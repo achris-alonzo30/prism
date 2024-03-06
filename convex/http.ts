@@ -25,7 +25,7 @@ http.route({
         case "user.created":
           await ctx.runMutation(internal.users.createUser, {
             tokenIdentifier: `https://${process.env.CLERK_HOSTNAME}|${result.data.id}`,
-            name: `${result.data.first_name} ${result.data.last_name}`,
+            name: `${result.data.first_name ?? ""} ${result.data.last_name ?? ""}`,
             profileImage: result.data.image_url,
           });
           break;
@@ -33,7 +33,7 @@ http.route({
           case "user.updated":
             await ctx.runMutation(internal.users.updateUser, {
               tokenIdentifier: `https://${process.env.CLERK_HOSTNAME}|${result.data.id}`,
-              name: `${result.data.first_name} ${result.data.last_name}`,
+              name: `${result.data.first_name ?? ""} ${result.data.last_name ?? ""}`,
               profileImage: result.data.image_url,
             });
             break;

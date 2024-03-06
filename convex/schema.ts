@@ -38,4 +38,12 @@ export default defineSchema({
     fileId: v.id("files"),
     userId: v.id("users"),
   }).index("by_userId_orgId_fileId", ["userId", "orgId", "fileId"]),
+
+  messages: defineTable({
+    orgId: v.string(),
+    message: v.string(),
+    fileId: v.id("files"),
+    userId: v.id("users"),
+    userMesage: v.boolean(),
+  })
 });
