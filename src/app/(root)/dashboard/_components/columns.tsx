@@ -1,9 +1,8 @@
 "use client";
 
-
+import { Actions } from "./actions";
 import { useQuery } from "convex/react";
 import { formatRelative } from "date-fns";
-import { ActionColumns } from "./action-columns";
 import { ColumnDef } from "@tanstack/react-table";
 import { api } from "../../../../../convex/_generated/api";
 import { Doc, Id } from "../../../../../convex/_generated/dataModel";
@@ -54,9 +53,10 @@ export const columns: ColumnDef<Doc<"files"> & { isFavorited: boolean }>[] = [
     cell: ({ row }) => {
       return (
         <div>
-          <ActionColumns
+          <Actions
             file={row.original}
             isFavorited={row.original.isFavorited}
+            tableView
           />
         </div>
       );

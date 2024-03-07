@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useQuery } from "convex/react";
 import { formatRelative } from "date-fns";
-import { getFileUrl } from "@/lib/get-file-url";
 import { api } from "../../../../../convex/_generated/api";
 import { Doc } from "../../../../../convex/_generated/dataModel";
 
@@ -16,8 +15,9 @@ import {
     CardFooter,
     CardContent,
 } from "@/components/ui/card";
+import { Actions} from "./actions";
 import { ActionTooltip } from "@/components/action-tooltip";
-import { ActionCard } from "../files/_components/action-card";
+
 
 
 const typeIcons = {
@@ -31,7 +31,8 @@ export const FileCard = ({
 }: { 
     file: Doc<"files"> & { isFavorited: boolean}; 
 }) => {
-    const getImageUrl = useQuery(api.files.getFileUrl, { fileId: file.fileId});
+    
+    const fileUrl = useQuery(api.files.getFileUrl, { fileId: file.fileId});
     const userProfile = useQuery(api.users.getUserProfile, { userId: file.userId });
     
     return (
@@ -42,12 +43,12 @@ export const FileCard = ({
                     <ActionTooltip title={userProfile?.name ?? ""}>
                         <Image src={userProfile?.profileImage!} alt="profile image" width={30} height={30} className="object-cover aspect-square rounded-full" />
                     </ActionTooltip>
-                    <ActionCard file={file} isFavorited={file.isFavorited} />
+                    <Actions file={file} isFavorited={file.isFavorited} columnView />
                 </CardTitle>
             </CardHeader>
             <CardContent className="flex justify-center items-center w-auto" >
                 {file.fileType === "image" && (
-                    <Image src={getImageUrl ?? ""} alt="File preview" width={300} height={300} className="object-cover aspect-square rounded-md" />
+                    <Image src={fileUrl ?? ""} alt="File preview" width={300} height={300} className="object-cover aspect-square rounded-md" />
                 )}
                 {/* TODO: Find a way to snapshot the pdf and csv to display the preview */}
                 {file.fileType === "pdf" && (

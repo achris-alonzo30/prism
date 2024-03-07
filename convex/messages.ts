@@ -2,10 +2,12 @@ import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 
 
-export const messageLists = query({
+export const getMessages = query({
     args: {},
     handler: async(ctx) => {
         // Grab the most recent messages.
+
+        // TODO: Add pagination explore the pagination documents
         const messages = await ctx.db.query("messages").order("desc").take(100);
         // Reverse the list so that it's in a chronological order.
         return messages.reverse();

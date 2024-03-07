@@ -9,6 +9,7 @@ import { fileTypes } from "./schema";
 import { ConvexError, v } from "convex/values";
 import { Doc, Id } from "./_generated/dataModel";
 
+
 // STORAGE FILE UPLOADS
 export const generateUploadUrl = mutation(async (ctx) => {
   const identity = await ctx.auth.getUserIdentity();
@@ -72,13 +73,16 @@ export const createFile = mutation({
       );
     }
 
-    await ctx.db.insert("files", {
+    const file = await ctx.db.insert("files", {
       name: args.fileName,
       orgId: args.orgId,
       fileId: args.fileId,
       fileType: args.fileType,
       userId: hasAccess.user._id,
     });
+
+    return file;
+
   },
 });
 
@@ -138,15 +142,9 @@ export const getFiles = query({
 export const getFileUrl = query({
   args: { fileId: v.id("_storage") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new ConvexError("You must be signed in to perform this action");
-    }
-
     const imageUrl = await ctx.storage.getUrl(args.fileId);
 
-    return imageUrl
+    return imageUrl;
   },
 });
 

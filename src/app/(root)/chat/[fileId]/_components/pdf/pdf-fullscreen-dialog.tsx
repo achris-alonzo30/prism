@@ -3,11 +3,12 @@
 
 import { useState } from 'react';
 import SimpleBar from 'simplebar-react';
+import { useQuery } from 'convex/react';
 import { useRouter } from "next/navigation";
 import { Document, Page } from "react-pdf";
 import { Expand, Loader } from 'lucide-react';
-import { getFileUrl } from '@/lib/get-file-url';
 import { useResizeDetector } from 'react-resize-detector';
+import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
 
 import {
@@ -20,8 +21,6 @@ import { Button } from '@/components/ui/button';
 import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
 
-
-
 export const PDFFullscreenDialog = ({ fileId }: { fileId: Id<"_storage"> }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
@@ -29,6 +28,7 @@ export const PDFFullscreenDialog = ({ fileId }: { fileId: Id<"_storage"> }) => {
     const router = useRouter();
     const { toast } = useToast();
 
+    const fileUrl = useQuery(api.files.getFileUrl, {fileId});
 
     const { width, ref } = useResizeDetector();
     return (
@@ -54,7 +54,7 @@ export const PDFFullscreenDialog = ({ fileId }: { fileId: Id<"_storage"> }) => {
                 <SimpleBar autoHide={false} className="max-h-[calc(100vh-10rem)] mt-6">
                     <div ref={ref}>
                         <Document
-                            file={getFileUrl(fileId)}
+                            file={fileUrl}
                             className="max-h-full"
                             loading={<Loader />}
                             onLoadError={() => toast({

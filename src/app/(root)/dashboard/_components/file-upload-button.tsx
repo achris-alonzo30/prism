@@ -1,15 +1,15 @@
 "use client";
 
 import * as z from "zod";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { api } from "../../../../../convex/_generated/api";
-import { Doc } from "../../../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../../../convex/_generated/dataModel";
 
-import { Loader2, Inbox } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import {
     Form,
@@ -28,7 +28,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -80,8 +79,6 @@ export const FileUploadButton = () => {
         })
 
         const { storageId } = await result.json();
-        
-        console.log("StorageId: ", storageId);
         
         const types = {
             "image/png": "image",

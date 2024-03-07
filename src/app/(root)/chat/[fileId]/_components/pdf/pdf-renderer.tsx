@@ -6,18 +6,17 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import * as z from "zod";
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useQuery } from 'convex/react';
 import SimpleBar from 'simplebar-react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from "next/navigation";
-import { getFileUrl } from '@/lib/get-file-url';
 import { Document, Page, pdfjs } from "react-pdf";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useResizeDetector } from 'react-resize-detector';
+import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
 
-
 import { ChevronDown, ChevronUp, RotateCw, Search } from 'lucide-react';
-
 
 import {
     DropdownMenu,
@@ -40,6 +39,8 @@ const PDFRenderer = ({ fileId }: { fileId: Id<"_storage"> }) => {
     const [currPage, setCurrPage] = useState(1);
     const [scale, setScale] = useState(1);
 
+    const fileUrl = useQuery(api.files.getFileUrl, {fileId});
+
     const isLoading = renderedScale !== scale;
 
     const pageSchema = z.object({
@@ -57,7 +58,6 @@ const PDFRenderer = ({ fileId }: { fileId: Id<"_storage"> }) => {
             page: "1"
         }
     })
-
 
     const router = useRouter();
     const { toast } = useToast();
@@ -142,7 +142,7 @@ const PDFRenderer = ({ fileId }: { fileId: Id<"_storage"> }) => {
                 <SimpleBar autoHide={false} className="max-h-[calc(100vh-10rem)]" >
                     <div ref={ref}>
                         <Document
-                            file={getFileUrl(fileId)}
+                            file={fileUrl}
                             className="max-h-full"
                             loading={<Loader />}
                             onLoadError={() => toast({

@@ -4,10 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Protect } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { getFileUrl } from "@/lib/get-file-url";
 import { useMutation, useQuery } from "convex/react";
-import { api } from "../../../../../../convex/_generated/api";
-import { Doc } from "../../../../../../convex/_generated/dataModel";
+
 
 import {
     FileIcon,
@@ -17,6 +15,7 @@ import {
     TrashIcon,
     MoreVertical,
     MessageCircleMore,
+    MoreHorizontal,
 } from "lucide-react";
 
 import {
@@ -38,21 +37,29 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import { api } from "../../../../../convex/_generated/api";
+import { Doc } from "../../../../../convex/_generated/dataModel";
 
 
-export const ActionCard = ({
+export const Actions = ({
     file,
-    isFavorited
+    isFavorited,
+    columnView,
+    tableView,
 }: {
     file: Doc<"files">;
     isFavorited: boolean;
+    columnView?: boolean;
+    tableView?: boolean;
 }) => {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
+    
     const self = useQuery(api.users.getSelf);
     const deleteFile = useMutation(api.files.deleteFile);
     const restoreFile = useMutation(api.files.restoreFile);
     const toggleFavorite = useMutation(api.files.toggleFavorite);
+    const fileUrl = useQuery(api.files.getFileUrl, { fileId: file.fileId })
 
     const router = useRouter();
     const { toast } = useToast();
@@ -92,12 +99,13 @@ export const ActionCard = ({
 
             <DropdownMenu>
                 <DropdownMenuTrigger>
-                    <MoreVertical className="text-center" />
+                    {columnView && <MoreVertical className="text-center" />}
+                    {tableView && <MoreHorizontal className="text-center" />}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuItem
                         onClick={() => {
-                            window.open(getFileUrl(file.fileId), "_blank");
+                            window.open(fileUrl ?? "", "_blank");
                         }}
                         className="flex gap-x-1 items-center cursor-pointer"
                     >
