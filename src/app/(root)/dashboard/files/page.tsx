@@ -4,7 +4,7 @@ export default function FilesPage() {
 
     return (
         <>
-            <Browser title="Files" />
+            <Browser title="documents" />
         </>
     )
 }

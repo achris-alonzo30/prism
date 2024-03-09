@@ -35,7 +35,7 @@ export const columns: ColumnDef<Doc<"files"> & { isFavorited: boolean }>[] = [
   {
     header: "User",
     cell: ({ row }) => {
-      return <UserCell userId={row.original.userId} />;
+      return <UserCell userId={row.original.userId!} />;
     },
   },
   {

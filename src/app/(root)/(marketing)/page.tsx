@@ -68,14 +68,14 @@ export default function Home() {
           <div>
             <div className='mx-auto max-w-6xl px-6 lg:px-8'>
               <div className='mt-16 flow-root sm:mt-24'>
-                <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4'>
+                <div className='rounded-xl bg-gray-800/5 p-2 ring-1 ring-inset ring-gray-800/10 lg:-m-4 lg:rounded-2xl lg:p-4'>
                   <Image
                     src='/dashboard-preview.png'
                     alt='product preview'
-                    width={1364}
-                    height={866}
+                    width={2940}
+                    height={1408}
                     quality={100}
-                    className='rounded-md bg-white p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10'
+                    className='rounded-md bg-gray-700 p-0.5 shadow-2xl ring-1 ring-gray-900/10'
                   />
                 </div>
               </div>

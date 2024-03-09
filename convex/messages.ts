@@ -1,33 +1,48 @@
 import { v } from "convex/values";
-import { query, mutation } from "./_generated/server";
+import { internal } from "./_generated/api";
+import { mutation, query } from "./_generated/server";
 
-
-export const getMessages = query({
-    args: {},
-    handler: async(ctx) => {
-        // Grab the most recent messages.
-
-        // TODO: Add pagination explore the pagination documents
-        const messages = await ctx.db.query("messages").order("desc").take(100);
-        // Reverse the list so that it's in a chronological order.
-        return messages.reverse();
-    }
+export const messages = query({
+  args: {
+    sessionId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return (
+      await ctx.db
+        .query("messages")
+        .withIndex("bySessionId", (q) => q.eq("sessionId", args.sessionId))
+        .collect()
+    ).map(({ message: { data, type }, ...fields }) => ({
+      ...fields,
+      isViewer: type === "human",
+      text: data.content,
+    }));
+  },
 });
 
 export const sendMessage = mutation({
-    args: { 
-        orgId: v.string(),
-        message: v.string(),
-        userId: v.id("users"), 
-        fileId: v.id("files"), 
-        userMessage: v.boolean()},
-    handler: async (ctx, args) => {
-        await ctx.db.insert("messages", {
-            userId: args.userId,
-            message: args.message,
-            orgId: args.orgId,
-            fileId: args.fileId,
-            userMesage: args.userMessage
-        })
-    }
-})
+  args: {
+    message: v.string(),
+    sessionId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.scheduler.runAfter(0, internal.serve.answer, {
+      sessionId: args.sessionId,
+      message: args.message,
+    });
+  },
+});
+
+export const clearMessage = mutation({
+  args: {
+    sessionId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const messages = await ctx.db
+      .query("messages")
+      .withIndex("bySessionId", (q) => q.eq("sessionId", args.sessionId))
+      .collect();
+
+    await Promise.all(messages.map((message) => ctx.db.delete(message._id)));
+  },
+});

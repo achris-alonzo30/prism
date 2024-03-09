@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Protect } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { useSessionId } from "@/lib/use-session-id";
 import { useMutation, useQuery } from "convex/react";
 
 
@@ -59,10 +60,10 @@ export const Actions = ({
     const deleteFile = useMutation(api.files.deleteFile);
     const restoreFile = useMutation(api.files.restoreFile);
     const toggleFavorite = useMutation(api.files.toggleFavorite);
-    const fileUrl = useQuery(api.files.getFileUrl, { fileId: file.fileId })
 
     const router = useRouter();
     const { toast } = useToast();
+    const sessionId = useSessionId();
 
     return (
         <>
@@ -105,7 +106,7 @@ export const Actions = ({
                 <DropdownMenuContent>
                     <DropdownMenuItem
                         onClick={() => {
-                            window.open(fileUrl ?? "", "_blank");
+                            window.open(file.fileUrl ?? "", "_blank");
                         }}
                         className="flex gap-x-1 items-center cursor-pointer"
                     >
@@ -146,7 +147,7 @@ export const Actions = ({
                         <DropdownMenuItem
                             className="flex gap-x-1 items-center cursor-pointer"
                         >
-                            <Link href={`/chat/${file.fileId}`} target="_blank" className="flex gap-x-1 items-center">
+                            <Link href={`/chat/${file.fileId}?sessionId=${sessionId}`} target="_blank" className="flex gap-x-1 items-center">
                                 <MessageCircleMore className="w-4 h-4" /> Chat
                             </Link>
                         </DropdownMenuItem>

@@ -10,16 +10,48 @@ export const fileTypes = v.union(
 export const roles = v.union(v.literal("admin"), v.literal("member"));
 
 export default defineSchema({
+  // This will avoid recomputing embeddings
+  cache: defineTable({
+    key: v.string(),
+    value: v.any()
+  }).index("byKey", ["key"]),
+
+  documents: defineTable({
+    embedding: v.array(v.number()),
+    text: v.string(),
+    metadata: v.any(),
+  }).vectorIndex("byEmbedding", {
+    vectorField: "embedding",
+    dimensions: 1536,
+  }),
+
   files: defineTable({
     name: v.string(),
     orgId: v.string(),
     fileType: fileTypes,
     userId: v.id("users"),
     fileId: v.id("_storage"),
+    fileUrl: v.optional(v.string()),
     markedForDeletion: v.optional(v.boolean()),
   })
     .index("by_orgId", ["orgId"])
     .index("by_markedForDeletion", ["markedForDeletion"]),
+
+  messages: defineTable({
+    // Which conversation this message belongs to
+    sessionId: v.string(),
+    message: v.object({
+      // The message create either AI or user
+      type: v.string(),
+      data: v.object({
+        // The content of the message
+        content: v.string(),
+        role: v.optional(v.string()),
+        name: v.optional(v.string()),
+        additional_kwargs: v.optional(v.any()),
+      })
+    })
+  }).index("bySessionId", ["sessionId"]),
 
   users: defineTable({
     tokenIdentifier: v.string(),
@@ -39,11 +71,4 @@ export default defineSchema({
     userId: v.id("users"),
   }).index("by_userId_orgId_fileId", ["userId", "orgId", "fileId"]),
 
-  messages: defineTable({
-    orgId: v.string(),
-    message: v.string(),
-    fileId: v.id("files"),
-    userId: v.id("users"),
-    userMesage: v.boolean(),
-  })
 });

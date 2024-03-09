@@ -15,8 +15,8 @@ const PDFRendererPage = async ({ params }: { params: { fileId: Id<"_storage"> } 
           </div>
         </div>
 
-        <div className='shrink-0 flex-[0.75] border-t border-gray-200 lg:w-96 lg:border-l lg:border-t-0'>
-          <ChatWrapper  />
+        <div className='shrink-0 flex-[0.75] border-t border-primary-color lg:w-96 lg:border-l lg:border-t-0'>
+          <ChatWrapper fileId={params.fileId}  />
         </div>
       </div>
     </div>

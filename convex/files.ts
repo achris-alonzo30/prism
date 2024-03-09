@@ -8,7 +8,7 @@ import {
 import { fileTypes } from "./schema";
 import { ConvexError, v } from "convex/values";
 import { Doc, Id } from "./_generated/dataModel";
-
+import { internal } from "./_generated/api";
 
 // STORAGE FILE UPLOADS
 export const generateUploadUrl = mutation(async (ctx) => {
@@ -21,7 +21,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
 });
 
 // UTILITY FUNCTIONS
-async function orgAccess(orgId: string, ctx: QueryCtx | MutationCtx) {
+export async function orgAccess(orgId: string, ctx: QueryCtx | MutationCtx) {
   const identity = await ctx.auth.getUserIdentity();
 
   if (!identity) return null;
@@ -44,7 +44,7 @@ async function orgAccess(orgId: string, ctx: QueryCtx | MutationCtx) {
   return { user };
 }
 
-async function fileAccess(ctx: QueryCtx | MutationCtx, fileId: Id<"files">) {
+export async function fileAccess(ctx: QueryCtx | MutationCtx, fileId: Id<"files">) {
   const file = await ctx.db.get(fileId);
 
   if (!file) return null;
@@ -73,7 +73,12 @@ export const createFile = mutation({
       );
     }
 
-    const file = await ctx.db.insert("files", {
+    let storageFileId = args.fileId;
+
+    const fileUrl = (await ctx.storage.getUrl(storageFileId)) as string;
+
+    const fileId = await ctx.db.insert("files", {
+      fileUrl,
       name: args.fileName,
       orgId: args.orgId,
       fileId: args.fileId,
@@ -81,8 +86,13 @@ export const createFile = mutation({
       userId: hasAccess.user._id,
     });
 
-    return file;
+    if (fileId && args.fileType === "pdf") {
+      await ctx.scheduler.runAfter(0, internal.ingest.load.createEmbeddings, {
+        storageFileId,
+      });
+    }
 
+    return fileId;
   },
 });
 
@@ -142,9 +152,9 @@ export const getFiles = query({
 export const getFileUrl = query({
   args: { fileId: v.id("_storage") },
   handler: async (ctx, args) => {
-    const imageUrl = await ctx.storage.getUrl(args.fileId);
+    const fileUrl = await ctx.storage.getUrl(args.fileId);
 
-    return imageUrl;
+    return fileUrl;
   },
 });
 

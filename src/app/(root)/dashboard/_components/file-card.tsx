@@ -32,7 +32,6 @@ export const FileCard = ({
     file: Doc<"files"> & { isFavorited: boolean}; 
 }) => {
     
-    const fileUrl = useQuery(api.files.getFileUrl, { fileId: file.fileId});
     const userProfile = useQuery(api.users.getUserProfile, { userId: file.userId });
     
     return (
@@ -48,7 +47,7 @@ export const FileCard = ({
             </CardHeader>
             <CardContent className="flex justify-center items-center w-auto" >
                 {file.fileType === "image" && (
-                    <Image src={fileUrl ?? ""} alt="File preview" width={300} height={300} className="object-cover aspect-square rounded-md" />
+                    <Image src={file.fileUrl ?? ""} alt="File preview" width={300} height={300} className="object-cover aspect-square rounded-md" />
                 )}
                 {/* TODO: Find a way to snapshot the pdf and csv to display the preview */}
                 {file.fileType === "pdf" && (

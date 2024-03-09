@@ -3,11 +3,11 @@
 import * as z from "zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { api } from "../../../../../convex/_generated/api";
-import { Doc, Id } from "../../../../../convex/_generated/dataModel";
+import { Doc } from "../../../../../convex/_generated/dataModel";
 
 import { Loader2 } from "lucide-react";
 
@@ -79,7 +79,7 @@ export const FileUploadButton = () => {
         })
 
         const { storageId } = await result.json();
-        
+
         const types = {
             "image/png": "image",
             "image/jpg": "image",

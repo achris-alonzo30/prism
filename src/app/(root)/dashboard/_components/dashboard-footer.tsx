@@ -8,7 +8,7 @@ import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 export const DashboardFooter = () => {
     const year = getYear();
     return (
-        <footer className="flex h-12 border-t items-center mt-12 sm:mt-24 mt-auto">
+        <footer className="flex h-12 border-t items-center sm:mt-24 mt-auto">
             <div className="container px-6 mx-auto items-center">
                 <div className="flex flex-col items-center sm:flex-row sm:justify-between">
 
