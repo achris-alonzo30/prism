@@ -3,7 +3,7 @@ import Browser from "../_components/browser";
 export default function FavoritesPage() {
     return (
         <>
-            <Browser title="Favorites" favoriteFilter />
+            <Browser title="favorites" favoriteFilter />
         </>
     )
 }

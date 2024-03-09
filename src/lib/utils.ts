@@ -7,8 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 
 export function constructMetadata({
   title = "Prism - A real-time storage powered by AI",
-  description = "Unlock real-time insights with Prism's lightning speed and AI-driven mastery, empowering students for efficient document management and accelerating success.",
-  image = "/thumbnail.png",
+  description = "Experience the transformative power of Prism's lightning speed and AI-driven mastery, unlocking real-time insights to simplify mundane tasks, empowering individuals for efficient automation and freeing up time for what truly matters in life.",
+  image = "/prism-thumbnail.png",
   icons = "/logo.svg",
   noIndex = false
 }: {
