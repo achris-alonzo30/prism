@@ -14,7 +14,7 @@ export const DashboardFooter = () => {
 
                     <div className="text-sm text-gray-500 flex items-center gap-x-2">
                         <Image src="/logo.svg" alt="logo" width="32" height="32" />
-                        <p>Design by{" "}<strong className="font-bold text-primary-color">Chris Lonzo</strong></p>
+                        <p>Powered by{" "}<strong className="font-bold text-primary-color">Chat GPT and Convex</strong></p>
                     </div>
 
                      
@@ -24,7 +24,7 @@ export const DashboardFooter = () => {
                             href="https://www.linkedin.com/in/lonzochris/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mx-2 text-zinc-600 transition-colors duration-300 dark:text-zinc-300 hover:text-[#7600FF]/70 dark:hover:text-[#7600FF]/60"
+                            className="mx-2 text-zinc-600 transition-colors duration-300 dark:text-zinc-300 hover:text-primary-color/70 dark:hover:text-primary-color/60"
                         >
                             <LinkedInLogoIcon className="w-5 h-5" />
                         </Link>
@@ -32,7 +32,7 @@ export const DashboardFooter = () => {
                             href="https://github.com/achris-alonzo30?tab=repositories"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mx-2 text-zinc-600 transition-colors duration-300 dark:text-zinc-300 hover:text-[#7600FF]/70 dark:hover:text-[#7600FF]/60"
+                            className="mx-2 text-zinc-600 transition-colors duration-300 dark:text-zinc-300 hover:text-primary-color/70 dark:hover:text-primary-color/60"
                         >
                             <GitHubLogoIcon className="w-5 h-5" />
                         </Link>
