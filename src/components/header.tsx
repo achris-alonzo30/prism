@@ -9,14 +9,16 @@ import {
 } from "@clerk/nextjs";
 
 import { Logo } from "./logo";
+import { Menubar } from "./menubar";
 import { Button } from "@/components/ui/button";
 
 
 
 export const Header = () => {
     return (
-        <header className="flex border-b h-14 items-center">
-            <div className="flex items-center justify-between container mx-auto">
+        <header className="flex border-b h-14 items-center px-6">
+            <Menubar />
+            <div className="sm:flex items-center justify-between container mx-auto hidden">
                 <Logo />
                 <div className="flex items-center gap-x-2">
                     <SignedIn>

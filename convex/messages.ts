@@ -24,11 +24,13 @@ export const sendMessage = mutation({
   args: {
     message: v.string(),
     sessionId: v.string(),
+    fileId: v.id("_storage"),
   },
   handler: async (ctx, args) => {
     await ctx.scheduler.runAfter(0, internal.serve.answer, {
       sessionId: args.sessionId,
       message: args.message,
+      fileId: args.fileId,
     });
   },
 });
@@ -46,3 +48,5 @@ export const clearMessage = mutation({
     await Promise.all(messages.map((message) => ctx.db.delete(message._id)));
   },
 });
+
+

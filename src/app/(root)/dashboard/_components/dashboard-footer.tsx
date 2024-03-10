@@ -8,16 +8,14 @@ import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 export const DashboardFooter = () => {
     const year = getYear();
     return (
-        <footer className="flex h-12 border-t items-center sm:mt-24 mt-auto">
+        <footer className="flex border-t items-center mt-12 sm:mt-24">
             <div className="container px-6 mx-auto items-center">
-                <div className="flex flex-col items-center sm:flex-row sm:justify-between">
+                <div className="flex flex-col items-center sm:flex-row sm:justify-between py-4">
 
-                    <div className="text-sm text-gray-500 flex items-center gap-x-2">
+                    <div className="text-sm text-gray-500 flex flex-col sm:flex-row items-center gap-y-2 sm:gap-x-2">
                         <Image src="/logo.svg" alt="logo" width="32" height="32" />
-                        <p>Powered by{" "}<strong className="font-bold text-primary-color">Chat GPT and Convex</strong></p>
+                        <p>Powered by{" "}<strong className="font-bold text-primary-color">Chat GPT</strong> and <strong className="font-bold text-primary-color">Convex</strong></p>
                     </div>
-
-                     
 
                     <div className="flex mt-3 mx-2 sm:mt-0">
                         <Link

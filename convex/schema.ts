@@ -13,7 +13,7 @@ export default defineSchema({
   // This will avoid recomputing embeddings
   cache: defineTable({
     key: v.string(),
-    value: v.any()
+    value: v.any(),
   }).index("byKey", ["key"]),
 
   documents: defineTable({

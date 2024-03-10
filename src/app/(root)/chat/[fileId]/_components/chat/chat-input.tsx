@@ -6,6 +6,7 @@ import { useMutation } from "convex/react";
 import { Dispatch, SetStateAction } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "../../../../../../../convex/_generated/api";
+import { Id } from "../../../../../../../convex/_generated/dataModel";
 
 import { Send } from "lucide-react";
 
@@ -20,6 +21,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 
+
 const chatInputSchema = z.object({
     message: z.string().min(0, { message: "Please enter a message" }),
 });
@@ -27,9 +29,10 @@ const chatInputSchema = z.object({
 type ChatInputProps = {
     sessionId: string,
     setScrolled: Dispatch<SetStateAction<boolean>>
+    fileId: Id<"_storage">
 }
 
-export const ChatInput = ({ sessionId, setScrolled }: ChatInputProps) => {
+export const ChatInput = ({ sessionId, setScrolled, fileId }: ChatInputProps) => {
     const { toast } = useToast();
 
     const sendMessage = useMutation(api.messages.sendMessage);
@@ -45,7 +48,7 @@ export const ChatInput = ({ sessionId, setScrolled }: ChatInputProps) => {
 
     const handleSubmit = async (data: z.infer<typeof chatInputSchema>) => {
         try {
-            await sendMessage({ message: data.message, sessionId });
+            await sendMessage({ message: data.message, sessionId, fileId });
         } catch (error) {
             console.error(error);
             form.reset();

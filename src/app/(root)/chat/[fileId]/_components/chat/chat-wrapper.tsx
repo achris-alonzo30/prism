@@ -44,7 +44,7 @@ export const ChatWrapper = ({ fileId } :  { fileId: Id<"_storage"> }) => {
                     <ChatMessages listRef={listRef} messages={messages} setScrolled={setScrolled} />
                 )}
             </div>
-            <ChatInput sessionId={sessionId} setScrolled={setScrolled} />
+            <ChatInput sessionId={sessionId} setScrolled={setScrolled} fileId={fileId} />
         </div>
     )
 }

@@ -61,9 +61,9 @@ export default function Browser({ title, favoriteFilter, deleteFilter }: Browser
     })) ?? [];
     return (
         <>
-            <div className="flex items-center justify-between mb-10 sm:mb-20">
-                <h1 className="text-2xl sm:text-4xl font-semibold">{title}</h1>
-                <div className="flex items-center gap-x-2">
+            <div className="flex items-center justify-between mb-10 sm:mb-20 space-x-1">
+                <h1 className="text-xl sm:text-2xl md:text-4xl font-semibold">{title}</h1>
+                <div className="flex items-center gap-x-1 sm:gap-x-2">
                     <SearchBar setQuery={setQuery} query={query} />
                     <FileUploadButton />
                 </div>
