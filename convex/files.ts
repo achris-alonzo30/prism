@@ -152,8 +152,9 @@ export const getFiles = query({
 export const getFileUrl = query({
   args: { fileId: v.id("_storage") },
   handler: async (ctx, args) => {
-    const fileUrl = await ctx.storage.getUrl(args.fileId);
-
+    const getUrl = await ctx.storage.getUrl(args.fileId);
+    const fileUrl = await fetch(getUrl as string).then((res) => res.text());
+    
     return fileUrl;
   },
 });
