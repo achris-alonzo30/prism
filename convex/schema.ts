@@ -9,8 +9,9 @@ export const fileTypes = v.union(
 
 export const roles = v.union(v.literal("admin"), v.literal("member"));
 
+export const messageRole = v.union(v.literal("user"), v.literal("bot"));
+
 export default defineSchema({
-  // This will avoid recomputing embeddings
   cache: defineTable({
     key: v.string(),
     value: v.any(),
@@ -24,18 +25,6 @@ export default defineSchema({
     vectorField: "embedding",
     dimensions: 1536,
   }),
-
-  files: defineTable({
-    name: v.string(),
-    orgId: v.string(),
-    fileType: fileTypes,
-    userId: v.id("users"),
-    fileId: v.id("_storage"),
-    fileUrl: v.optional(v.string()),
-    markedForDeletion: v.optional(v.boolean()),
-  })
-    .index("by_orgId", ["orgId"])
-    .index("by_markedForDeletion", ["markedForDeletion"]),
 
   messages: defineTable({
     // Which conversation this message belongs to
@@ -52,6 +41,18 @@ export default defineSchema({
       })
     })
   }).index("bySessionId", ["sessionId"]),
+
+  files: defineTable({
+    name: v.string(),
+    orgId: v.string(),
+    fileType: fileTypes,
+    userId: v.id("users"),
+    fileId: v.id("_storage"),
+    fileUrl: v.optional(v.string()),
+    markedForDeletion: v.optional(v.boolean()),
+  })
+    .index("by_orgId", ["orgId"])
+    .index("by_markedForDeletion", ["markedForDeletion"]),
 
   users: defineTable({
     tokenIdentifier: v.string(),

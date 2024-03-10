@@ -35,7 +35,7 @@ export const FileCard = ({
     const userProfile = useQuery(api.users.getUserProfile, { userId: file.userId });
     const fileUrl = useQuery(api.files.getFileUrl, { fileId: file.fileId });
     return (
-        <Card className="shadow-md dark:shadow-gray-600 transform hover:-translate-y-1 transition-all duration-400">
+        <Card className="shadow-md dark:shadow-gray-600 transform hover:-translate-y-1 transition-all duration-400 h-full">
             <CardHeader>
                 {/* TODO: Redesign this part */}
                 <CardTitle className="flex items-center justify-between">
@@ -45,7 +45,7 @@ export const FileCard = ({
                     <Actions file={file} isFavorited={file.isFavorited} columnView />
                 </CardTitle>
             </CardHeader>
-            <CardContent className="flex justify-center items-center w-auto" >
+            <CardContent className="flex justify-center items-center w-auto f-full" >
                 {file.fileType === "image" && (
                     <Image src={fileUrl ?? ""} alt="File preview" width={300} height={300} className="object-cover aspect-square rounded-md" onError={(e) => console.error(e)} />
                 )}
@@ -54,7 +54,7 @@ export const FileCard = ({
                     <FileTextIcon className="w-24 h-24 text-center justify-center my-12" />
                 )}
             </CardContent>
-            <CardFooter className="flex flex-col space-y-2 p-2 pt-auto">
+            <CardFooter className="flex flex-col space-y-2 p-2 mt-auto">
                 <div className="flex items-center gap-x-2">
                     {typeIcons[file.fileType]}
                     <p className="text-base font-bold truncate">{file.name}</p>
