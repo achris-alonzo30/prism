@@ -47,7 +47,7 @@ export const FileCard = ({
             </CardHeader>
             <CardContent className="flex justify-center items-center w-auto f-full" >
                 {file.fileType === "image" && (
-                    <Image src={file.fileUrl ?? ""} alt="File preview" width="300" height="300" className="object-cover aspect-square  rounded-md" onError={(e) => console.error(e)} />
+                    <img src={file.fileUrl ?? ""} alt="File preview" width="300" height="300" className="object-cover aspect-square  rounded-md" onError={(e) => console.error(e)} />
                 )}
                 {/* TODO: Find a way to snapshot the pdf and csv to display the preview */}
                 {file.fileType === "pdf" && (
