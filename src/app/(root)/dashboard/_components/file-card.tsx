@@ -33,7 +33,7 @@ export const FileCard = ({
 }) => {
     
     const userProfile = useQuery(api.users.getUserProfile, { userId: file.userId });
-    const fileUrl = useQuery(api.files.getFileUrl, { fileId: file.fileId });
+
     return (
         <Card className="shadow-md dark:shadow-gray-600 transform hover:-translate-y-1 transition-all duration-400 h-full">
             <CardHeader>
@@ -47,11 +47,11 @@ export const FileCard = ({
             </CardHeader>
             <CardContent className="flex justify-center items-center w-auto f-full" >
                 {file.fileType === "image" && (
-                    <Image src={fileUrl ?? ""} alt="File preview" width={300} height={300} className="object-cover aspect-square rounded-md" onError={(e) => console.error(e)} />
+                    <Image src={file.fileUrl ?? ""} alt="File preview" width="300" height="300" className="object-cover aspect-square  rounded-md" onError={(e) => console.error(e)} />
                 )}
                 {/* TODO: Find a way to snapshot the pdf and csv to display the preview */}
                 {file.fileType === "pdf" && (
-                    <FileTextIcon className="w-24 h-24 text-center justify-center my-12" />
+                    <FileTextIcon className="w-[140px] h-[140px] text-center justify-center my-12" />
                 )}
             </CardContent>
             <CardFooter className="flex flex-col space-y-2 p-2 mt-auto">

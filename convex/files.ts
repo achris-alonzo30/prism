@@ -75,11 +75,11 @@ export const createFile = mutation({
     }
 
     let storageFileId = args.fileId;
- 
-    const fileUrl = (await ctx.storage.getUrl(storageFileId)) as string;
 
+    const fileUrl = await ctx.storage.getUrl(storageFileId);
+    
     const fileId = await ctx.db.insert("files", {
-      fileUrl,
+      fileUrl: fileUrl ?? "",
       name: args.fileName,
       orgId: args.orgId,
       fileId: args.fileId,

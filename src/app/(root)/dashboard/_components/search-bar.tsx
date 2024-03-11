@@ -37,7 +37,6 @@ export const SearchBar = ({ setQuery, query }: { query: string, setQuery: Dispat
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             setQuery(data.query);
-            form.reset();
         } catch (error) {
             console.error(error);
             toast({
