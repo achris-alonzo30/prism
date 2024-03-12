@@ -7,8 +7,6 @@ import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { ConversationalRetrievalQAChain } from "langchain/chains";
 import { ConvexVectorStore } from "langchain/vectorstores/convex";
 import { ConvexChatMessageHistory } from "langchain/stores/message/convex";
-import { ContextualCompressionRetriever } from "langchain/retrievers/contextual_compression";
-import { EmbeddingsFilter } from "langchain/retrievers/document_compressors/embeddings_filter";
 
 const OPENAI_MODEL = "gpt-3.5-turbo";
 
@@ -16,7 +14,6 @@ export const answer = internalAction({
   args: {
     sessionId: v.string(),
     message: v.string(),
-    fileId: v.id("_storage"),
   },
   handler: async (ctx, args) => {
     const vectorStore = new ConvexVectorStore(new OpenAIEmbeddings(), { ctx });
@@ -53,6 +50,6 @@ export const answer = internalAction({
       }
     );
 
-    await chain.invoke({ question: args.message, prompt, fileId: args.fileId });
+    await chain.invoke({ question: args.message, prompt });
   },
 });

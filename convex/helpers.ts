@@ -14,7 +14,7 @@ export async function paginate<T extends TableNames>(
 
   while (!isDone) {
     const result: PaginationResult<Doc<T>> = (await ctx.runQuery(
-      internal.pagination.paginateQuery,
+      internal.helpers.paginateQuery,
       {
         table,
         cursor,

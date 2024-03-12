@@ -48,7 +48,9 @@ export const ChatInput = ({ sessionId, setScrolled, fileId }: ChatInputProps) =>
 
     const handleSubmit = async (data: z.infer<typeof chatInputSchema>) => {
         try {
-            await sendMessage({ message: data.message, sessionId, fileId });
+            await sendMessage({
+                message: data.message, sessionId,
+            });
         } catch (error) {
             console.error(error);
             form.reset();
