@@ -16,7 +16,7 @@ export const answer = internalAction({
   },
   handler: async (ctx, args) => {
     const vectorStore = new ConvexVectorStore(new OpenAIEmbeddings(), { ctx });
-    const model = new ChatOpenAI({ modelName: OPENAI_MODEL, temperature: 0 });
+    const model = new ChatOpenAI({ modelName: OPENAI_MODEL });
 
     // Retrieves the chat history from a single conversataion
     const memory = new BufferMemory({

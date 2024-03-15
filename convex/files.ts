@@ -88,7 +88,7 @@ export const createFile = mutation({
     });
 
     if (fileId && args.fileType === "pdf") {
-      await ctx.scheduler.runAfter(0, internal.ingest.load.createEmbeddings, {
+      await ctx.scheduler.runAfter(50, internal.ingest.load.createEmbeddings, {
         storageFileId,
       });
     }
