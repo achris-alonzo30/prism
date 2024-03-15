@@ -2,7 +2,6 @@ import { v } from "convex/values";
 import { BufferMemory } from "langchain/memory";
 import { internalAction } from "./_generated/server";
 import { ChatOpenAI } from "langchain/chat_models/openai";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { ConversationalRetrievalQAChain } from "langchain/chains";
 import { ConvexVectorStore } from "langchain/vectorstores/convex";
@@ -18,12 +17,6 @@ export const answer = internalAction({
   handler: async (ctx, args) => {
     const vectorStore = new ConvexVectorStore(new OpenAIEmbeddings(), { ctx });
     const model = new ChatOpenAI({ modelName: OPENAI_MODEL, temperature: 0 });
-
-    const prompt = ChatPromptTemplate.fromTemplate(
-      `Important: You are an intelligent chatbot designed to help users by answering questions only on Enterprise services & activities.
-      Answer the questions only the document that is provided to you. If the question doesn't come from the document, say that you don't know.
-      If context is not empty and the answer cannot be determined from context, say "I cannot determine the answer from context". If you don't know the answer, just say that you don't know, don't try to make up an answer. Do not print your answer starting with "Answer:"`
-    );
 
     // Retrieves the chat history from a single conversataion
     const memory = new BufferMemory({
@@ -45,6 +38,6 @@ export const answer = internalAction({
       }
     );
 
-    await chain.invoke({ question: args.message, prompt });
+    await chain.invoke({ question: args.message });
   },
 });
