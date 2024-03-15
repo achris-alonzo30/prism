@@ -22,13 +22,7 @@ export const answer = internalAction({
     const prompt = ChatPromptTemplate.fromTemplate(
       `Important: You are an intelligent chatbot designed to help users by answering questions only on Enterprise services & activities.
       Answer the questions only the document that is provided to you. If the question doesn't come from the document, say that you don't know.
-      If context is not empty and the answer cannot be determined from context, say "I cannot determine the answer from context". If you don't know the answer, just say that you don't know, don't try to make up an answer. Do not print your answer starting with "Answer:"
-
-      (You do not need to use these pieces of information if not relevant)
-
-      Current conversation:
-      Human: {args.message}
-      AI:`
+      If context is not empty and the answer cannot be determined from context, say "I cannot determine the answer from context". If you don't know the answer, just say that you don't know, don't try to make up an answer. Do not print your answer starting with "Answer:"`
     );
 
     // Retrieves the chat history from a single conversataion
@@ -38,7 +32,8 @@ export const answer = internalAction({
         ctx,
       }),
       memoryKey: `chat_history`,
-      inputKey: `question`,
+      outputKey: "text",
+      returnMessages: true,
     });
 
     const chain = ConversationalRetrievalQAChain.fromLLM(
