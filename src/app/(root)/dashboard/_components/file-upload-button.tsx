@@ -71,7 +71,8 @@ export const FileUploadButton = () => {
         const postUrl = await generateUploadUrl();
 
         const fileType = data.file[0].type;
-
+        console.log("DATA", data.file[0])
+        console.log("FILE_TYPE", fileType)
         const result = await fetch(postUrl, {
             method: "POST",
             headers: { "Content-Type": fileType },
@@ -107,7 +108,7 @@ export const FileUploadButton = () => {
                 title: "File uploaded.",
                 description: "File uploaded successfully.",
                 variant: "success",
-                action: <ToastAction altText={"Dismiss"} >Dismiss</ToastAction>
+                action: <ToastAction altText={"Dismiss"}>Dismiss</ToastAction>
             })
 
         } catch (error) {

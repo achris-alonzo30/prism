@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState} from "react";
 import { useQuery } from "convex/react";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { api } from "../../../../../convex/_generated/api";
@@ -48,7 +48,7 @@ export default function Browser({ title, favoriteFilter, deleteFilter }: Browser
     if (organization.isLoaded && user.isLoaded) {
         orgId = organization.organization?.id ?? user.user?.id;
     }
-
+    
     const favorites = useQuery(api.files.getAllFavorite, orgId ? { orgId } : "skip");
 
     const files = useQuery(api.files.getFiles, orgId ? { orgId, query, fileType: type === "all" ? undefined : type , favorites: favoriteFilter, deletes: deleteFilter } : "skip");
@@ -59,6 +59,8 @@ export default function Browser({ title, favoriteFilter, deleteFilter }: Browser
         ...file,
         isFavorited: (favorites ?? []).some((favorite) => favorite.fileId === file._id)
     })) ?? [];
+
+
     return (
         <>
             <div className="flex items-center justify-between mb-10 sm:mb-20 space-x-1">

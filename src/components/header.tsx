@@ -12,8 +12,6 @@ import { Logo } from "./logo";
 import { Menubar } from "./menubar";
 import { Button } from "@/components/ui/button";
 
-
-
 export const Header = () => {
     return (
         <header className="flex border-b h-14 items-center px-6">

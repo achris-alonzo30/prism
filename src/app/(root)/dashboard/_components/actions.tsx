@@ -54,7 +54,6 @@ export const Actions = ({
     tableView?: boolean;
 }) => {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-
     
     const self = useQuery(api.users.getSelf);
     const deleteFile = useMutation(api.files.deleteFile);

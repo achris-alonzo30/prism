@@ -1,7 +1,6 @@
 import {
   MutationCtx,
   QueryCtx,
-  action,
   internalMutation,
   mutation,
   query,
@@ -45,7 +44,10 @@ export async function orgAccess(orgId: string, ctx: QueryCtx | MutationCtx) {
   return { user };
 }
 
-export async function fileAccess(ctx: QueryCtx | MutationCtx, fileId: Id<"files">) {
+export async function fileAccess(
+  ctx: QueryCtx | MutationCtx,
+  fileId: Id<"files">
+) {
   const file = await ctx.db.get(fileId);
 
   if (!file) return null;
@@ -77,7 +79,7 @@ export const createFile = mutation({
     let storageFileId = args.fileId;
 
     const fileUrl = await ctx.storage.getUrl(storageFileId);
-    
+
     const fileId = await ctx.db.insert("files", {
       fileUrl: fileUrl ?? "",
       name: args.fileName,
@@ -154,7 +156,7 @@ export const getFileUrl = query({
   args: { fileId: v.id("_storage") },
   handler: async (ctx, args) => {
     const fileUrl = await ctx.storage.getUrl(args.fileId);
-    
+
     return fileUrl;
   },
 });
@@ -261,3 +263,5 @@ export const getAllFavorite = query({
     return favorites;
   },
 });
+
+
