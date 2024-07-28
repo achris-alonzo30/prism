@@ -7,7 +7,6 @@ import { ConversationalRetrievalQAChain } from "langchain/chains";
 import { ConvexVectorStore } from "langchain/vectorstores/convex";
 import { ConvexChatMessageHistory } from "langchain/stores/message/convex";
 
-const OPENAI_MODEL = "gpt-3.5-turbo";
 
 export const answer = internalAction({
   args: {
@@ -16,7 +15,7 @@ export const answer = internalAction({
   },
   handler: async (ctx, args) => {
     const vectorStore = new ConvexVectorStore(new OpenAIEmbeddings(), { ctx });
-    const model = new ChatOpenAI({ modelName: OPENAI_MODEL });
+    const model = new ChatOpenAI({ modelName: "gpt-4o-mini" });
 
     // Retrieves the chat history from a single conversataion
     const memory = new BufferMemory({
